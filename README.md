@@ -146,3 +146,100 @@ function AddTask() {
     return <button onClick={addTask}>Add Task</button>
 }
 ```
+
+## Schema
+
+Given an SQL schema like this:
+
+```sql
+CREATE TABLE users (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    email TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    locked_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    failed_login_attempts INT DEFAULT 0 NOT NULL
+);
+CREATE TABLE tasks (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    user_id UUID NOT NULL
+);
+CREATE POLICY "Allow access" ON tasks USING (true) WITH CHECK (true);
+ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
+CREATE INDEX tasks_user_id_index ON tasks (user_id);
+ALTER TABLE tasks ADD CONSTRAINT tasks_ref_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION;
+```
+
+Thin Backend will automatically offer these GraphQL queries and mutations:
+
+```graphql
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    "Returns all records from the `users` table"
+    users: [User!]!
+
+    "Returns all records from the `tasks` table"
+    tasks: [Task!]!
+}
+
+type Mutation {
+    createUser(user: NewUser!): User!
+    updateUser(id: ID!, patch: UserPatch!): User!
+    deleteUser(id: ID!): User!
+
+    createTask(task: NewTask!): Task!
+    updateTask(id: ID!, patch: TaskPatch!): Task!
+    deleteTask(id: ID!): Task!
+}
+
+scalar UUID
+scalar Timestamp
+
+type User {
+    id: ID!
+    email: String!
+    passwordHash: String!
+    lockedAt: Timestamp
+    failedLoginAttempts: Int!
+    tasks: [Task!]!
+}
+type Task {
+    id: ID!
+    title: String!
+    body: String!
+    userId: UUID!
+}
+
+input NewUser {
+    id: ID!
+    email: String!
+    passwordHash: String!
+    lockedAt: Timestamp
+    failedLoginAttempts: Int!
+}
+input NewTask {
+    id: ID!
+    title: String!
+    body: String!
+    userId: UUID!
+}
+
+input UserPatch {
+    id: ID!
+    email: String!
+    passwordHash: String!
+    lockedAt: Timestamp
+    failedLoginAttempts: Int!
+}
+input TaskPatch {
+    id: ID!
+    title: String!
+    body: String!
+    userId: UUID!
+}
+```
