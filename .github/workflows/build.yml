@@ -1,0 +1,49 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Install nix and cachix
+        uses: cachix/install-nix-action@v14.1
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/51bcdc4cdaac48535dabf0ad4642a66774c609ed.tar.gz
+      - name: Cachix Init
+        uses: cachix/cachix-action@v10
+        with:
+          name: digitallyinduced
+          skipPush: true
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+      - name: "Building"
+        run : nix-build docker/image.nix -o docker-image.tar.gz
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: "Load builded image"
+        run : |
+          docker_image_id=$( (docker load -q < docker-image.tar.gz ) | awk '{ print $3}')
+          docker tag $docker_image_id ghcr.io/digitallyinduced/thin-backend:latest
+      - name: "Push Image"
+        run : docker push ghcr.io/digitallyinduced/thin-backend:latest
