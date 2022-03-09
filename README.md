@@ -92,3 +92,57 @@ You can think of this like in a git workflow: In git changes are only applied to
     In your browser the familiar IHP dev tools provide a GraphQL Server over IHP DataSync (WebSockets for low latency) or alternatively like other GraphQL servers via HTTP at http://localhost:8000/api/graphql (e.g. if you make a request from Postman it will just work).
 
     It's still missing a lot, but it's enough to be useful already
+
+### Connect from JS
+
+Currently the simplest way to connect to the GraphQL server is via IHP DataSync. This will use a WebSocket as the underlying communication channel, this leads to superior latency compared to normal HTTP requests.
+
+Install IHP DataSync into your project:
+
+```bash
+npm install "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?3b66d8db44a69a2d58c7b47f18996ce1a74f38bc"
+```
+
+Then you can run a query like this:
+
+```javascript
+
+import { useGraphQLQuery } from 'ihp-datasync/react';
+
+function HelloWorld() {
+    const result = useGraphQLQuery("{ users { id email tasks { id title } } }");
+    if (result === null) {
+        return <div>Loading</div>
+    }
+
+    return <div>
+        {result.users.map(user => <User user={user} />)}
+    </div>
+}
+```
+
+Use the `query` function to run mutations:
+
+```javascript
+import * as GraphQL from 'ihp-datasync/graphql';
+
+function AddTask() {
+    async function addTask(event) {
+        event.preventDefault();
+
+        const task = {
+            title: 'Hello World',
+            body: 'hello',
+            userId: '40f1dbb4-403c-46fd-8062-fcf5362f2154'
+        };
+
+        const newTask = await GraphQL.query(`
+            mutation {
+                createTask(task: $task) { id }
+            }
+        `, { task });
+    }
+
+    return <button onClick={addTask}>Add Task</button>
+}
+```
