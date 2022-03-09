@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://ihp.digitallyinduced.com/" target="_blank">
-    <img src="Guide/images/ihp-logo-readme.svg" />
+    <img src="Guide/images/screenshot.png" />
   </a>
 </p>
 
 <p align="center">
-  <img alt="MIT License" src="https://img.shields.io/github/license/digitallyinduced/ihp">
+  <img alt="MIT License" src="https://img.shields.io/github/license/digitallyinduced/ihp-graphql">
 
   <a href="https://twitter.com/digitallyinduce" target="_blank">
     <img src="https://img.shields.io/twitter/follow/digitallyinduce"/>
