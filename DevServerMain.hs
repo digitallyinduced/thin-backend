@@ -295,6 +295,9 @@ ensureSchemaSqlExists = do
     schemaExists <- Directory.doesFileExist "Application/Schema.sql"
     unless schemaExists (Text.writeFile "Application/Schema.sql" defaultSchemaSql)
 
+    fixturesExists <- Directory.doesFileExist "Application/Fixtures.sql"
+    unless fixturesExists (Text.writeFile "Application/Fixtures.sql" defaultFixturesSql)
+
 
 defaultSchemaSql = [trimming|
 -- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
@@ -308,4 +311,8 @@ CREATE TABLE users (
     confirmation_token TEXT DEFAULT NULL,
     is_confirmed BOOLEAN DEFAULT false NOT NULL
 );
+|]
+
+defaultFixturesSql = [trimming|
+-- Here you can place 'INSERT INTO' statements to fill your database with test data for local development
 |]
