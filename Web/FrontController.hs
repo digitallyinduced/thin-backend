@@ -12,6 +12,8 @@ import IHP.DataSync.REST.Controller
 
 import IHP.LoginSupport.Middleware
 import Web.Controller.Sessions
+import Web.Controller.Users
+import Web.Controller.JWT
 
 -- Controller Imports
 import Web.Controller.Static
@@ -20,8 +22,9 @@ instance FrontController WebApplication where
     controllers = 
         [ startPage WelcomeAction
         , webSocketApp @DataSyncController
-        , parseRoute @ApiController
         , parseRoute @SessionsController
+        , parseRoute @UsersController
+        , parseRoute @JWTController
         -- Generator Marker
         ]
 

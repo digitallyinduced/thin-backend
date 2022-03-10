@@ -1,0 +1,97 @@
+h1 {
+    font-size: 24px;
+    font-weight: 400;
+}
+
+p {
+    color: hsla(196, 13%, 40%, 1);
+    font-size: 14px;
+}
+
+a {
+    color: hsla(192, 81%, 26%, 1);
+    font-weight: 500;
+}
+
+
+.btn-primary, .btn-primary.disabled, .btn-primary:disabled {
+    background-color:  hsla(192, 81%, 26%, 1);
+    border: 1px solid hsla(192, 81%, 19%, 0.1);
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: hsla(192, 81%, 26%, 0.8);
+    border: 1px solid hsla(192, 81%, 19%, 0.1);
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    background-color: hsla(192, 81%, 26%, 0.8);
+    border: 1px solid hsla(192, 81%, 19%, 0.1);
+}
+
+.btn-primary:focus {
+    background-color:  hsla(192, 81%, 36%, 1);
+    border: 1px solid hsla(192, 81%, 19%, 0.1);
+}
+
+#app-icon {
+    width:  64px;
+}
+
+.btn .spinner-border {
+    display: none;
+}
+
+
+.btn:disabled .button-text {
+    display: none;
+}
+
+.btn:disabled .spinner-border {
+    display: inline-block;
+}
+
+#built-with {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.btn-google {
+    background-color: #4285f4;
+    background-color: #fff;
+    color: #757575 !important;
+    font-size: 16px;
+    font-weight: 400;
+    transition: all 0.2s;
+}
+
+.btn-google:hover {
+    background-color: rgb(117 117 117 / 10%);
+    color: #757575;
+}
+
+.btn-google:active, .btn-google:focus {
+    background-color: rgb(117 117 117 / 20%) !important;
+    color: #757575;
+    box-shadow: none !important;
+}
+
+.btn-google.disabled {
+    background-color: rgb(117 117 117 / 10%) !important;
+    color: #757575;
+    opacity: 0.5;
+    font-weight: 400 !important;
+}
+
+.btn-oauth {
+    position: relative;
+}
+
+.btn-oauth img {
+    height: 1.25rem;
+    position: absolute;
+    left: 1rem;
+    top: 11px;
+}
