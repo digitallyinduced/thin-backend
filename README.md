@@ -243,3 +243,16 @@ input TaskPatch {
     userId: UUID!
 }
 ```
+
+
+## Community
+
+Questions, or need help? [Join our Slack Community](https://ihp.digitallyinduced.com/Slack)
+
+[Also check out the Forum!](https://ihp.digitallyinduced.com/community/)
+
+## Contributing
+
+We are happy to merge your pull requests!😄
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
