@@ -77,15 +77,11 @@ You can think of this like in a git workflow: In git changes are only applied to
 
 ## Getting Started
 
-1. Download the Docker Image:
+1. Start Container with Docker:
     ```bash
-    curl "https://ihp-website.s3.eu-west-1.amazonaws.com/ihp-graphql-builds/2022-03-07.tar.gz" | docker load
+    docker run -p 8000:8000 -p 8001:8001 --pull=missing ghcr.io/digitallyinduced/thin-backend:latest
     ```
-2. Start Container:
-    ```bash
-    docker run -p 8000:8000 -p 8001:8001 app:x8va4ln1wvj3k0kai11i24phwxbb87mj
-    ```
-3. Open http://localhost:8001/
+2. Open http://localhost:8001/
     
     <img src="Guide/images/screenshot.png" />
     
