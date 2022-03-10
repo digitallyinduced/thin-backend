@@ -81,6 +81,10 @@ You can think of this like in a git workflow: In git changes are only applied to
     ```bash
     docker run -p 8000:8000 -p 8001:8001 --pull=missing ghcr.io/digitallyinduced/thin-backend:latest
     ```
+
+    **Explanation of ports:**
+    - Port 8000: GraphQL server
+    - Port 8001: Dev Tools
 2. Open http://localhost:8001/
     
     <img src="Guide/images/screenshot.png" />
