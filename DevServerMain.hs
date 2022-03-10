@@ -1,6 +1,7 @@
 module Main (main) where
 
 import ClassyPrelude
+import IHP.Prelude (trimming)
 import qualified System.Process as Process
 import IHP.HaskellSupport
 import qualified Data.ByteString.Char8 as ByteString
@@ -28,7 +29,8 @@ import qualified IHP.Log as Log
 import Data.Default (def, Default (..))
 import qualified IHP.IDE.CodeGen.MigrationGenerator as MigrationGenerator
 import Main.Utf8 (withUtf8)
-
+import qualified Data.Text.IO as Text
+import qualified System.Directory as Directory
 
 
 
@@ -66,6 +68,9 @@ main = withUtf8 do
 
     start
     async Telemetry.reportTelemetry
+
+    ensureSchemaSqlExists
+
     forever do
         appState <- readIORef appStateRef
         when isDebugMode (Log.debug $ " ===> " <> (tshow appState))
@@ -280,3 +285,27 @@ instance FrontController RootApplication where
 
 instance Worker RootApplication where
     workers _ = []
+
+
+ensureSchemaSqlExists :: IO ()
+ensureSchemaSqlExists = do
+    Directory.createDirectoryIfMissing False "Application"
+    Directory.createDirectoryIfMissing False "Application/Migration"
+
+    schemaExists <- Directory.doesFileExist "Application/Schema.sql"
+    unless schemaExists (Text.writeFile "Application/Schema.sql" defaultSchemaSql)
+
+
+defaultSchemaSql = [trimming|
+-- Your database schema. Use the Schema Designer at http://localhost:8001/ to add some tables.
+CREATE TABLE users (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    email TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    locked_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    failed_login_attempts INT DEFAULT 0 NOT NULL,
+    access_token TEXT DEFAULT NULL,
+    confirmation_token TEXT DEFAULT NULL,
+    is_confirmed BOOLEAN DEFAULT false NOT NULL
+);
+|]
