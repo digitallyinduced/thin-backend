@@ -244,6 +244,11 @@ input TaskPatch {
 }
 ```
 
+## Example Apps
+
+You can find some example apps inside the `Examples` directory of this repository:
+
+- [Todo App](https://github.com/digitallyinduced/thin-backend/tree/master/Examples/TodoApp)
 
 ## Community
 
