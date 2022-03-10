@@ -1,0 +1,2 @@
+openssl genrsa -out jwt 2048
+openssl rsa -in jwt -pubout -out jwt.pub

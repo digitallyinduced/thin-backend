@@ -4,13 +4,16 @@ CREATE TABLE users (
     email TEXT NOT NULL,
     password_hash TEXT NOT NULL,
     locked_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-    failed_login_attempts INT DEFAULT 0 NOT NULL
+    failed_login_attempts INT DEFAULT 0 NOT NULL,
+    access_token TEXT DEFAULT NULL,
+    confirmation_token TEXT DEFAULT NULL,
+    is_confirmed BOOLEAN DEFAULT false NOT NULL
 );
 CREATE TABLE tasks (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     body TEXT NOT NULL,
-    user_id UUID NOT NULL
+    user_id UUID DEFAULT ihp_user_id() NOT NULL
 );
 CREATE POLICY "Allow access" ON tasks USING (true) WITH CHECK (true);
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
