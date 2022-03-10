@@ -10,6 +10,10 @@ import qualified Data.Maybe as Maybe
 import qualified IHP.Log.Types as Log
 import IHP.Mail
 
+import qualified System.Directory as Directory
+import OpenSSL.RSA as OpenSSL
+import OpenSSL.PEM as OpenSSL
+
 config :: ConfigBuilder
 config = do
     option (AppHostname "localhost")
@@ -49,7 +53,14 @@ initJWTPrivateKey = do
     privateKeyInEnv <- envOrNothing "JWT_PRIVATE_KEY"
     privateKeyText <- case privateKeyInEnv of
         Just privateKey -> pure privateKey
-        Nothing -> liftIO $ BS.readFile "Config/jwt"
+        Nothing -> liftIO do
+            jwtExists <- Directory.doesFileExist "Application/jwt.key"
+            unless jwtExists do
+                (publicKey, privateKey) <- generateKeyPair
+                BS.writeFile "Application/jwt.key" privateKey
+                BS.writeFile "Application/jwt.pub" publicKey
+
+            BS.readFile "Application/jwt.key"
 
     let privateKey :: JWT.Signer =
             privateKeyText
@@ -74,3 +85,10 @@ instance EnvVarReader Bool where
     envStringToValue "true" = Right True
     envStringToValue "false" = Right False
     envStringToValue otherwise    = Left "Expected 'true' or 'false'"
+
+generateKeyPair :: IO (ByteString, ByteString)
+generateKeyPair = do
+    keyPair <- OpenSSL.generateRSAKey' 2048 65537
+    privateKey <- OpenSSL.writePKCS8PrivateKey keyPair Nothing
+    publicKey <- OpenSSL.writePublicKey keyPair
+    pure (cs publicKey, cs privateKey)
