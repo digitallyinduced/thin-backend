@@ -15,7 +15,7 @@ localPkgs.dockerTools.buildImage {
   };
   extraCommands = ''
     mkdir -p home/app/build
-    mkdir -p home/app/Application home/app/Migration
+    mkdir -p home/app/Application home/app/Application/Migration
     touch home/app/Application/Fixtures.sql
     cp ${ihpApp}/lib/Schema.sql home/app/Application/Schema.sql
     chmod -R 777 home/app
