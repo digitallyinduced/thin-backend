@@ -26,7 +26,7 @@ jobs:
     - name: Build Docs
       run: |
           cd $GITHUB_WORKSPACE
-          cd Guide && nix-shell --run "make guide.tar.gz"
+          cd Docs && nix-shell --run "make guide.tar.gz"
     - name: Uploading to S3
       run: |
-          aws s3 cp ./Guide/guide.tar.gz s3://${{ secrets.S3_BUCKET }}/docs/thin-guide.tar.gz
+          aws s3 cp ./Docs/guide.tar.gz s3://${{ secrets.S3_BUCKET }}/docs/thin-guide.tar.gz
