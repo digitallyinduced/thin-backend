@@ -52,6 +52,8 @@ Here is a short overview of the whole structure:
 | Schema.sql                    | Database tables are defined here                                                    |
 | Fixtures.sql                  | Fills the database with test data for local development                             |
 | Migrations/                   | Database migrations are stored here                                                 |
+| jwt.pub                       | Public key generated for the JWT-based auth in your project                         |
+| jwt.secret                    | Secret key generated for the JWT-based auth in your project                         |
 
 It's recommended to track all these files in git.
 
@@ -164,3 +166,263 @@ The `tasks` table has been created now. Let’s quickly connect to our database 
     If there was some issue with the migration, the `tasks` would not be in the table list at the left.
 
 Now our database is ready to be consumed by our React app.
+
+
+## 5. The Frontend
+
+*This guide uses React and a custom GraphQL client for connecting to the GraphQL API. You can of course build the frontend however you like, and e.g. use a different view library and a different GraphQL client (like e.g. Apollo).*
+
+### NPM
+
+First we need to set up a new npm project. Run `npm init` and follow the instructions on the screen:
+
+```bash
+npm init
+```
+
+**Don't forget this:**
+
+Open `package.json` and set `"type": "module",`, like this:
+
+```javascript
+{
+  "name": "todo-app",
+  "type": "module", // <----
+  "dependencies": {
+    // ...
+  }
+}
+```
+
+This enables support for ES6 style imports.
+
+
+Next we need react and a bundler:
+
+```bash
+npm install esbuild react react-dom
+```
+
+Additionally we need to install `ihp-backend` package for dealing with auth, and the `ihp-datasync` package for having a GraphQL Client:
+
+```bash
+npm install ihp-backend "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?3d301459e675038cc7786dcbd42bf5dab4e90157"
+```
+
+### ESBuild
+
+
+Create a `server.js` file and paste this into it:
+
+```javascript
+import esbuild from 'esbuild'
+import { createServer, request } from 'http'
+import { spawn } from 'child_process'
+
+const clients = []
+
+esbuild
+  .build({
+    entryPoints: ['./app.jsx'],
+    bundle: true,
+    outfile: 'public/app.js',
+    banner: { js: ' (() => new EventSource("/esbuild").onmessage = () => location.reload())();' },
+    define: {
+      'process.env.NODE_ENV': JSON.stringify("development"),
+    },
+    watch: {
+      onRebuild(error, result) {
+        clients.forEach((res) => res.write('data: update\n\n'))
+        clients.length = 0
+        console.log(error ? error : '...')
+      },
+    },
+  })
+  .catch(() => process.exit(1))
+
+esbuild.serve({ servedir: './public', port: 3001 }, {}).then(() => {
+  createServer((req, res) => {
+    const { url, method, headers } = req
+    if (req.url === '/esbuild')
+      return clients.push(
+        res.writeHead(200, {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        })
+      )
+    const path = ~url.split('/').pop().indexOf('.') ? url : `/index.html` //for PWA with router
+    req.pipe(
+      request({ hostname: '0.0.0.0', port: 3001, path, method, headers }, (prxRes) => {
+        res.writeHead(prxRes.statusCode, prxRes.headers)
+        prxRes.pipe(res, { end: true })
+      }),
+      { end: true }
+    )
+  }).listen(3000)
+
+  console.log('Development server running on http://localhost:3000')
+
+  setTimeout(() => {
+    const op = { darwin: ['open'], linux: ['xdg-open'], win32: ['cmd', '/c', 'start'] }
+    const ptf = process.platform
+    if (clients.length === 0) spawn(op[ptf][0], [...[op[ptf].slice(1)], `http://localhost:3000`])
+  }, 1000) //open the default browser only if it is not opened yet
+})
+```
+
+This file contains a small server that drives `esbuild` to bundle our JS app.
+
+We also need to add a `index.html` file that will load our app.
+
+1. Create a `public` directory
+2. Put this into `public/index.html`:
+
+    ```html
+    <!DOCTYPE HTML>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+            <!-- Customize these Open Graph tags for nice meta data when sharing on social networks -->
+            <meta property="og:title" content="App">
+            <meta property="og:type" content="website">
+            <meta property="og:url" content="TODO">
+            <meta property="og:description" content="TODO">
+
+            <!-- By default we include bootstrap here, but you can use whatever CSS framework you like -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+            <!-- App specific CSS -->
+            <link rel="stylesheet" href="/app.css">
+
+            <title>App</title>
+        </head>
+        <body>
+            <div id="app"></div>
+
+
+            <!-- Don't need bootstrap JS helpers? Remove the following: -->
+
+            <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+            <!-- Include the app bundle -->
+            <script src="/app.js"></script>
+        </body>
+    </html>
+    ```
+
+### The App
+
+Next we need to implement our app. Create a file `app.jsx` and paste this into it:
+
+```javascript
+import React, { useState, useEffect } from 'react';
+import * as ReactDOM from 'react-dom'
+
+import { initIHPBackend } from 'ihp-datasync';
+import { IHPBackend, useCurrentUserId } from 'ihp-backend/react';
+import { useGraphQLQuery } from 'ihp-datasync/react';
+import * as GraphQL from 'ihp-datasync/graphql';
+import * as Backend from 'ihp-backend';
+
+function App() {
+    // With `useQuery()` you can access your database:
+    // 
+    //     const todos = useQuery(query('todos').orderBy('createdAt'));
+    //
+
+    return <IHPBackend requireLogin={false}>
+        <div className="container">
+            <AppNavbar/>
+            <Tasks />
+        </div>
+    </IHPBackend>
+}
+
+function Tasks() {
+    const result = useGraphQLQuery('{ tasks { id title userId } }');
+    if (result === null) {
+        return <div>Loading...</div>
+    }
+
+    return <div>
+        <h1>Tasks</h1>
+        <div className="mb-4">
+            {result.tasks.map(task => <Task key={task.id} task={task} />)}
+        </div>
+        <AddTaskButton/>
+    </div>
+}
+
+function Task({ task }) {
+    return <div>
+        {task.title}
+    </div>
+}
+
+function AddTaskButton() {
+    function addTask() {
+        const task = {
+            title: 'Hello World',
+        };
+        GraphQL.query('mutation { createTask(task: $task) }', { task })
+    return <button className="btn btn-primary" onClick={addTask}>
+        Add Task
+    </button>
+}
+
+function AppNavbar() {
+    // Use the `useCurrentUserId()` react hook to access the current logged in user
+    const userId = useCurrentUserId();
+
+    // This navbar requires bootstrap js helpers for the dropdown
+    // If the dropdown is not working, you like removed the bootstrap JS from your index.html
+
+    return <nav className="navbar navbar-expand-lg navbar-light bg-light mb-5">
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {userId}
+                    </a>
+                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a className="dropdown-item" href="#" onClick={() => Backend.logout()}>Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+}
+
+// This needs to be run before any calls to `query`, `createRecord`, etc.
+initIHPBackend({ host: 'http://localhost:8000' });
+Backend.initIHPBackend({ host: 'http://localhost:8000' });
+
+// Start the React app
+ReactDOM.render(<App/>, document.getElementById('app'));
+```
+
+### Starting
+
+Now our frontend is ready. Run `node server.js` to start the bundler.
+
+```bash
+node server.js
+```
+
+
+## 6. Summary
+
+You've now implemented the basics of todo management. Congrats!
+
+Along the way you've learned the basic operations of Thin Backend:
+
+- Fetching data with `useQuery` and GraphQL
+- Creating data using the `createTask(task: $task)` mutation
+- Updating data using the `updateTask(id: $taskId, patch: $patch)` mutation
+- Deleting data using the `deleteTask(id: $taskId)` mutation
+
+You now understand enough of Thin Backend to be dangerous. The best way to continue your journey is to start building things. Take a look at the other Guides to learn more about all the functionality provided by Thin Backend.
