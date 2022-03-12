@@ -294,13 +294,53 @@
         img[alt="G2 Badge"] {
             width: 128px;
         }
+
+        thead > tr {
+            background-color: #1c404f;
+            color: hsla(196, 13%, 80%, 0.8);
+            font-weight: 400;
+        }
+        table.table {
+            color: #fff;
+        }
+
+        .table thead th {
+            border-bottom: 0;
+            border-color: #0A4151;
+        }
+
+        .table td a {
+            color: #fff;
+        }
+
+        .table.table-hover tbody tr {
+            transition: all 0.05s;
+        }
+
+        .table.table-hover tbody tr:hover {
+            background-color: hsla(192, 81%, 26%, 0.25);
+        }
+
+        .table td, .table th {
+            border-top: 1px solid #0A4151;
+        }
+
+        ::selection {
+            background-color: #2aa198;
+            color: #fdf6e3;
+        }
+
+        .table tbody tr {
+            background-color: #002b36;
+        }
+
     </style>
 
     <script>
         /* Add bootstrap css class table to all markdown tables */
         var tables = document.querySelectorAll('table');
         for (let table of tables) {
-          table.classList.add('table', 'table-sm', 'table-striped');
+          table.classList.add('table', 'table-sm', 'table-light');
         }
     </script>
     <script>
