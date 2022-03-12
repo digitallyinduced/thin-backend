@@ -13,8 +13,12 @@
 </p>
 
 <p align="center">
-  <a href="https://ihp.digitallyinduced.com/" target="_blank">
-    IHP Website
+  <a href="https://thinbackend.app/" target="_blank">
+    Website
+  </a>
+  |
+  <a href="https://thinbackend.app/docs/index.html" target="_blank">
+    Documentation
   </a>
 </p>
 
@@ -42,20 +46,6 @@ Thin Backend uses Postgres Policies to make sure that users can only see what th
 
 Based on naming conventions Thin Backend will automatically generate the initial policies for you. You then only need to adjust the default policies based on your needs.
 
-E.g. if you add a column called `user_id` to your `tasks` table, it will add a policy that allows users to read their own task records and only add tasks with their own `user_id`:
-
-```sql
-CREATE POLICY "Users can manage their tasks"
-    ON tasks
-    USING
-        (user_id = ihp_user_id())
-    WITH CHECK
-        (user_id = ihp_user_id())
-    ;
-```
-
-<img src="Guide/images/policy.png" />
-
 **Powerful Schema Designer:**
 
 <img src="Guide/images/schema-designer.gif" />
@@ -68,11 +58,13 @@ Rather work with your keyboard? You can always skip the GUI and go straight to t
 
 **Create Tables in a Git-like Workflow:**
 
-<img src="Guide/images/migration.png" />
-
 Whenever you add or change a table in the Schema Designer, the changes will only be applied to the in-memory schema. The actual postgres database will only be touched when you run migrations.
 
 You can think of this like in a git workflow: In git changes are only applied to the repository history when you do a git commit. In Thin Backend this git commit is running a database migration.
+
+## Documentation
+
+[You can find extensive documentation on the Thin Backend website.](https://thinbackend.app/docs/index.html)
 
 
 ## Getting Started
