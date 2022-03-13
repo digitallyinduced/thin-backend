@@ -71,7 +71,7 @@ You can think of this like in a git workflow: In git changes are only applied to
 
 1. Start Container with Docker:
     ```bash
-    docker run -p 8000:8000 -p 8001:8001 --pull=always -v $PWD:/home/app/Application ghcr.io/digitallyinduced/thin-backend:latest
+    docker run -p 8000:8000 -p 8001:8001 --pull=always -v $PWD:/home/app/Application downloads.digitallyinduced.com/digitallyinduced/thin-backend
     ```
 
     **Explanation of ports:**
