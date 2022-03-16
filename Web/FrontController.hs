@@ -17,6 +17,7 @@ import Web.Controller.JWT
 
 -- Controller Imports
 import Web.Controller.Static
+import IHP.GraphQL.GraphQLWS
 
 instance FrontController WebApplication where
     controllers = 
@@ -25,6 +26,7 @@ instance FrontController WebApplication where
         , parseRoute @SessionsController
         , parseRoute @UsersController
         , parseRoute @JWTController
+        , routeGraphQLWS
         -- Generator Marker
         ]
 
