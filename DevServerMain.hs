@@ -71,6 +71,8 @@ main = withUtf8 do
 
     ensureSchemaSqlExists
 
+    printStartMessage portConfig
+
     forever do
         appState <- readIORef appStateRef
         when isDebugMode (Log.debug $ " ===> " <> (tshow appState))
@@ -79,6 +81,10 @@ main = withUtf8 do
         nextAppState <- handleAction appState action
         writeIORef appStateRef nextAppState
 
+printStartMessage :: _ => PortConfig -> IO ()
+printStartMessage portConfig = do
+    Log.info ("Dev Server     -> http://localhost:" <> tshow (get #toolServerPort portConfig))
+    Log.info ("GraphQL Server -> http://localhost:" <> tshow (get #appPort portConfig))
 
 handleAction :: (?context :: Context) => AppState -> Action -> IO AppState
 handleAction state@(AppState { appGHCIState }) (UpdatePostgresState postgresState) = 
