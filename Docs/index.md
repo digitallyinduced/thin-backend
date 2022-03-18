@@ -8,6 +8,8 @@ We believe that web application development can be fundamentally simplified by w
 1. All data is realtime and reflects the latest database state: Local state management is fundamentally hard as it's dealing with distributed system problems. Best to avoid it alltogether.
 2. All database operations go through a unified standard interface, GraphQL in our case.
 
+![](images/Index/architecture.png)
+
 Thin Backend comes with everything needed to build blazing fast, realtime single page apps.
 
 ## Feature Overview
