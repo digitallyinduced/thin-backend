@@ -177,17 +177,24 @@ handleAction state@(AppState { appGHCIState }) PauseApp =
 
 start :: (?context :: Context) => IO ()
 start = do
+    databaseUrlEnvVarSet <- isJust <$> Env.lookupEnv "DATABASE_URL"
+
     async startToolServer
     async startAppGHCI
-    async startPostgres
+    unless databaseUrlEnvVarSet do
+        async startPostgres
+        pure ()
     async startFileWatcher
     pure ()
 
 stop :: (?context :: Context) => AppState -> IO ()
 stop AppState { .. } = do
+    databaseUrlEnvVarSet <- isJust <$> Env.lookupEnv "DATABASE_URL"
+
     when (get #isDebugMode ?context) (Log.debug ("Stop called" :: Text))
     stopAppGHCI appGHCIState
-    stopPostgres postgresState
+
+    unless databaseUrlEnvVarSet (stopPostgres postgresState)
     stopFileWatcher fileWatcherState
     stopToolServer toolServerState
 
@@ -271,7 +278,8 @@ pauseAppGHCI _ = pure ()
 
 checkDatabaseIsOutdated :: IO Bool
 checkDatabaseIsOutdated = do
-    diff <- MigrationGenerator.diffAppDatabase
+    databaseUrl <- defaultDatabaseUrl
+    diff <- MigrationGenerator.diffAppDatabase databaseUrl
     pure (not (isEmpty diff))
 
 updateDatabaseIsOutdated state = ((do

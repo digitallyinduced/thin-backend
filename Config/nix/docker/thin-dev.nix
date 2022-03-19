@@ -1,11 +1,13 @@
 { localPkgs ? import <nixpkgs> {}
 , imagePkgs ? import <nixpkgs> { system = "x86_64-linux"; }
-, ihpApp ? import ./../default.nix { additionalNixpkgsOptions = { system = "x86_64-linux"; }; }
+, ihpApp ? import ./../../../default.nix {
+    additionalNixpkgsOptions = { system = "x86_64-linux"; };
+  }
 }:
 localPkgs.dockerTools.buildImage {
-  name = "app";
+  name = "thin-backend-dev";
   config = {
-    Cmd = [ "${ihpApp}/bin/RunDevServer" ];
+    Cmd = [ "${ihpApp}/bin/RunProdServer" ];
     WorkingDir = "/home/app";
     ExposedPorts = {
       "8000/tcp" = {};

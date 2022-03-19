@@ -30,7 +30,7 @@ docker run -p 8000:8000 \
     -p 8001:8001 \
     --pull=always \
     -v $PWD:/home/app/Application \
-    ghcr.io/digitallyinduced/thin-backend:latest
+    downloads.digitallyinduced.com/digitallyinduced/thin-backend:latest
 ```
 
 [If you don't have docker installed, you can get it on the Docker website.](https://www.docker.com/get-started)

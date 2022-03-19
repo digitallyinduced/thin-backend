@@ -37,14 +37,15 @@ watch-frontend:
 	touch Frontend/app.jsx # Force rebuild
 	$(MAKE) static/app.js ESBUILD_FLAGS="--watch"
 
-build/docker-image.tar.gz: build
-	nix-build docker/image.nix -o build/docker-image.tar.gz
+build/thin-dev.tar.gz: build
+	nix-build Config/nix/docker/thin-dev.nix -o build/thin-dev.tar.gz
 
-build/bin/RunDevServer: DevServerMain.hs
-	mkdir -p build/RunUnoptimizedProdServer build/bin
-	ghc -O0 ${GHC_OPTIONS} $< -o $@ -odir build/RunUnoptimizedProdServer -hidir build/RunUnoptimizedProdServer
+build/thin-prod.tar.gz: build
+	nix-build Config/nix/docker/thin-prod.nix -o build/thin-prod.tar.gz
+
+build/bin/RunDevServer: DevServerMain.hs build/bin static/prod.js static/prod.css build/Generated/Types.hs
+	mkdir -p build/RunDevServer build/bin
+	ghc -O0 ${GHC_OPTIONS} $< -o $@ -odir build/RunDevServer -hidir build/RunDevServer
 	chmod +x $<
-
-build/bin/RunUnoptimizedProdServer: build/bin/RunDevServer
 
 include ${IHP}/Makefile.dist
