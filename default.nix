@@ -5,7 +5,11 @@
     withDevTools ? true
 }:
 let
-    ihp = ./IHP;
+    ihp = builtins.fetchGit {
+        url = "https://github.com/digitallyinduced/ihp.git";
+        rev = "499a201c46ba43616616694e0693e6c5989d7cc0";
+        allRefs = true;
+    };
     haskellEnv = import ./Config/nix/custom-ihp-build.nix {
         ihp = ihp;
         haskellDeps = p: with p; [
