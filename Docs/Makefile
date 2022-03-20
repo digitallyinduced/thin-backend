@@ -4,6 +4,7 @@ HTML_FILES=
 HTML_FILES+= index.html
 HTML_FILES+= your-first-project.html
 HTML_FILES+= running.html
+HTML_FILES+= clients.html
 
 all: $(HTML_FILES) bootstrap.css instantclick.js
 
