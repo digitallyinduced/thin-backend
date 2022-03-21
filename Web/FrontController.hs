@@ -14,6 +14,7 @@ import IHP.LoginSupport.Middleware
 import Web.Controller.Sessions
 import Web.Controller.Users
 import Web.Controller.JWT
+import Application.Auth
 
 -- Controller Imports
 import Web.Controller.Static
@@ -23,6 +24,7 @@ instance FrontController WebApplication where
     controllers = 
         [ startPage WelcomeAction
         , webSocketApp @DataSyncController
+        , parseRoute @ApiController
         , parseRoute @SessionsController
         , parseRoute @UsersController
         , parseRoute @JWTController
@@ -35,4 +37,5 @@ instance InitControllerContext WebApplication where
         setLayout defaultLayout
         initAutoRefresh
         initAuthentication @User
+        initJWTAuthentication @User
         Role.ensureAuthenticatedRoleExists
