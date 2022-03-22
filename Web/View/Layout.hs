@@ -1,4 +1,4 @@
-module Web.View.Layout (defaultLayout, Html) where
+module Web.View.Layout (defaultLayout, statusLayout, Html) where
 
 import IHP.ViewPrelude
 import IHP.Environment
@@ -26,6 +26,30 @@ defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
         {renderFlashMessages}
         {inner}
     </div>
+</body>
+|]
+
+statusLayout :: Html -> Html
+statusLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
+<head>
+    {metaTags}
+
+    <link rel="stylesheet" href={assetPath "/vendor/bootstrap.min.css"}/>
+    <link rel="stylesheet" href={assetPath "/status.css"}/>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/icon.png">
+
+    <title>Thin Backend GraphQL Server</title>
+</head>
+<body>
+    {inner}
+    
+    {when isDevelopment devScripts}
+    <script src={assetPath "/vendor/jquery-3.6.0.min.js"}></script>
+    <script src={assetPath "/vendor/popper.min.js"}></script>
+    <script src={assetPath "/vendor/bootstrap.min.js"}></script>
+    <script src={assetPath "/vendor/clipboard.min.js"}></script>
+    <script>new ClipboardJS('[data-clipboard-text]');</script>
 </body>
 |]
 
