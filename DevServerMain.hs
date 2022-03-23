@@ -59,14 +59,16 @@ main = withUtf8 do
     -- Print IHP Version when in debug mode
     when isDebugMode (Log.debug ("IHP Version: " <> Version.ihpVersion))
 
+    appRef <- newIORef Nothing
+
     threadId <- myThreadId
     let catchHandler = do
             state <- readIORef appStateRef
-            stop state
+            stop appRef state
             throwTo threadId ExitSuccess
     installHandler sigINT (Catch catchHandler) Nothing
 
-    start
+    start appRef
     async Telemetry.reportTelemetry
 
     ensureSchemaSqlExists
@@ -175,20 +177,23 @@ handleAction state@(AppState { appGHCIState }) PauseApp =
 
 
 
-start :: (?context :: Context) => IO ()
-start = do
+start :: (?context :: Context) => _ -> IO ()
+start appRef = do
     databaseUrlEnvVarSet <- isJust <$> Env.lookupEnv "DATABASE_URL"
 
     async startToolServer
-    async startAppGHCI
+    
+    appAsync <- async startAppGHCI
+    writeIORef appRef (Just appAsync)
+
     unless databaseUrlEnvVarSet do
         async startPostgres
         pure ()
     async startFileWatcher
     pure ()
 
-stop :: (?context :: Context) => AppState -> IO ()
-stop AppState { .. } = do
+stop :: (?context :: Context) => _ -> AppState -> IO ()
+stop appRef AppState { .. } = do
     databaseUrlEnvVarSet <- isJust <$> Env.lookupEnv "DATABASE_URL"
 
     when (get #isDebugMode ?context) (Log.debug ("Stop called" :: Text))
@@ -197,6 +202,11 @@ stop AppState { .. } = do
     unless databaseUrlEnvVarSet (stopPostgres postgresState)
     stopFileWatcher fileWatcherState
     stopToolServer toolServerState
+
+    appAsync <- readIORef appRef
+    case appAsync of
+        Just appAsync -> cancel appAsync
+        Nothing -> pure ()
 
 startFileWatcher :: (?context :: Context) => IO ()
 startFileWatcher = do
