@@ -22,7 +22,7 @@ localPkgs.dockerTools.buildImage {
     cp ${ihpApp}/lib/Schema.sql home/app/Application/Schema.sql
     chmod -R 777 home/app
     ln -s ${ihpApp}/lib/build/ihp-lib home/app/build/ihp-lib
-    
+    ln -s ${ihpApp}/lib/static home/app/static
   '';
   contents = [imagePkgs.cacert];
   fromImage =
