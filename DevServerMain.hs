@@ -313,8 +313,7 @@ instance Worker RootApplication where
 
 ensureSchemaSqlExists :: IO ()
 ensureSchemaSqlExists = do
-    Directory.createDirectoryIfMissing False "Application"
-    Directory.createDirectoryIfMissing False "Application/Migration"
+    Directory.createDirectoryIfMissing True "Application/Migration"
 
     schemaExists <- Directory.doesFileExist "Application/Schema.sql"
     unless schemaExists (Text.writeFile "Application/Schema.sql" defaultSchemaSql)
