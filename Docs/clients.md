@@ -29,7 +29,7 @@ Now you can configure it like this:
 import { createClient } from 'graphql-ws';
 
 const client = createClient({
-  url: 'ws://localhost:8000/graphql-ws',
+  url: 'ws://localhost:8000/api/graphql-ws',
   connectionParams: {
     // Provide a JWT here if there's a logged in user
     jwt: "..."
@@ -62,7 +62,7 @@ import { createClient } from "graphql-ws";
 
 const webSocketLink = new GraphQLWsLink(
     createClient({
-        url: "ws://localhost:8000/graphql-ws",
+        url: "ws://localhost:8000/api/graphql-ws",
         connectionParams: {
             // Provide a JWT here if there's a logged in user
             jwt: "..."
@@ -88,7 +88,7 @@ import { render } from 'react-dom';
 
 const webSocketLink = new GraphQLWsLink(
     createClient({
-        url: "ws://localhost:8000/graphql-ws"
+        url: "ws://localhost:8000/api/graphql-ws"
     })
 );
 
