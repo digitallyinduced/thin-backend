@@ -67,4 +67,4 @@ You can find details on [the Partners page](https://ihp.digitallyinduced.com/Par
 
 Take a look [at the example task management application project](https://github.com/digitallyinduced/thin-backend/tree/master/Examples/TodoApp) to get to see some code. Follow the documentation to build this application yourself in the section "Your First Project".
 
-[Next: Your First Project](/your-first-project.html)
+[Next: Your First Project](your-first-project.html)
