@@ -23,12 +23,12 @@ import IHP.GraphQL.GraphQLWS
 instance FrontController WebApplication where
     controllers = 
         [ startPage WelcomeAction
+        , routeGraphQLWS
         , webSocketApp @DataSyncController
         , parseRoute @ApiController
         , parseRoute @SessionsController
         , parseRoute @UsersController
         , parseRoute @JWTController
-        , routeGraphQLWS
         -- Generator Marker
         ]
 
