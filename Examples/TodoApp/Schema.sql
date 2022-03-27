@@ -13,7 +13,7 @@ CREATE TABLE tasks (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     body TEXT NOT NULL,
-    user_id UUID NOT NULL
+    user_id UUID DEFAULT ihp_user_id() NOT NULL
 );
 CREATE INDEX tasks_user_id_index ON tasks (user_id);
 CREATE POLICY "Users can manage their tasks" ON tasks USING (user_id = ihp_user_id()) WITH CHECK (user_id = ihp_user_id());

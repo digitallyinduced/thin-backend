@@ -4,33 +4,59 @@ import * as ReactDOM from 'react-dom'
 import { initIHPBackend } from 'ihp-datasync';
 import { IHPBackend, useCurrentUserId } from 'ihp-backend/react';
 import { useGraphQLQuery } from 'ihp-datasync/react';
-import * as GraphQL from 'ihp-datasync/graphql';
 import * as Backend from 'ihp-backend';
 
-function App() {
-    // With `useQuery()` you can access your database:
-    // 
-    //     const todos = useQuery(query('todos').orderBy('createdAt'));
-    //
+import { ApolloClient, InMemoryCache, useQuery, gql, ApolloProvider, useSubscription, useMutation } from "@apollo/client";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
 
-    return <IHPBackend requireLogin={false}>
-        <div className="container">
-            <AppNavbar/>
-            <Tasks />
-        </div>
+const webSocketLink = new GraphQLWsLink(
+    createClient({
+        url: "ws://localhost:8000/api/graphql-ws",
+        connectionParams: () => {
+            return { jwt: localStorage.getItem('ihp_jwt') } // The <IHPBackend> component below stores the JWT inside localStorage
+        }
+    })
+);
+
+const client = new ApolloClient({
+    uri: 'http://localhost:8000/api/graphql',
+    cache: new InMemoryCache(),
+    link: webSocketLink
+});
+
+function App() {
+    return <IHPBackend requireLogin={true}>
+        <ApolloProvider client={client}>
+            <div className="container">
+                <AppNavbar/>
+                <Tasks />
+            </div>
+        </ApolloProvider>
     </IHPBackend>
 }
 
 function Tasks() {
-    const result = useGraphQLQuery('{ tasks { id title body userId } }');
-    if (result === null) {
+    const { loading, error, data } = useSubscription(gql`subscription {
+            tasks {
+                id
+                title
+                body
+            }
+        }`);
+    
+    if (loading) {
         return <div>Loading...</div>
+    }
+
+    if (error) {
+        return <div>error: {error.toString()}</div>
     }
 
     return <div>
         <h1>Tasks</h1>
         <div className="mb-4">
-            {result.tasks.map(task => <Task key={task.id} task={task} />)}
+            {data.tasks.map(task => <Task key={task.id} task={task} />)}
         </div>
         <AddTaskButton/>
     </div>
@@ -43,12 +69,13 @@ function Task({ task }) {
 }
 
 function AddTaskButton() {
+    const [createTask, { data, loading, error }] = useMutation(gql`mutation { createTask(task: $task) { id } }`);
     function addTask() {
         const task = {
             title: 'Hello World',
             body: 'Hello world 2'
         };
-        GraphQL.query('mutation { createTask(task: $task) }', { task })
+        createTask({ variables: { task } });
     }
     return <button className="btn btn-primary" onClick={addTask}>
         Add Task
