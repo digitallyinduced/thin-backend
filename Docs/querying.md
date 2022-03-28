@@ -30,7 +30,6 @@ This will return the following JSON:
     "users": [
         { "id": "ec355deb-8c67-4231-b2f0-73b6ebcec549", "email": "hello@example.com" },
         { "id": "119c5717-1531-4d16-81be-0faf92d10969", "email": "someone.else@example.com" }
-
     ]
 }
 ```
@@ -68,7 +67,7 @@ The `user(id: ..)` node knows that a single entity will be returned for the id, 
 A query to update a single database record by it's ID looks like this:
 
 ```graphql
-{
+mutation {
     updateUser(
         id: "ec355deb-8c67-4231-b2f0-73b6ebcec549",
         patch: { email: "new-email@example.com" }
@@ -95,7 +94,7 @@ This will return the following JSON:
 A query to delete a database record by it's ID looks like this:
 
 ```graphql
-{
+mutation {
     deleteUser(
         id: "ec355deb-8c67-4231-b2f0-73b6ebcec549"
     ) {
