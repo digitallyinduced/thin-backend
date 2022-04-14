@@ -1,14 +1,14 @@
 <p align="center">
-  <a href="https://ihp.digitallyinduced.com/" target="_blank">
+  <a href="https://thinbackend.app/" target="_blank">
     <img src="Guide/images/header.png" />
   </a>
 </p>
 
 <p align="center">
-  <img alt="MIT License" src="https://img.shields.io/github/license/digitallyinduced/ihp-graphql">
+  <img alt="MIT License" src="https://img.shields.io/github/license/digitallyinduced/thin-backend">
 
-  <a href="https://twitter.com/digitallyinduce" target="_blank">
-    <img src="https://img.shields.io/twitter/follow/digitallyinduce"/>
+  <a href="https://twitter.com/thinbackend" target="_blank">
+    <img src="https://img.shields.io/twitter/follow/thinbackend"/>
   </a>
 </p>
 
@@ -17,224 +17,157 @@
     Website
   </a>
   |
-  <a href="https://thinbackend.app/docs/index.html" target="_blank">
+  <a href="https://thinbackend.app/docs" target="_blank">
     Documentation
   </a>
 </p>
 
-# About Thin Backend (IHP GraphQL)
+# About Thin
 
-Thin Backend is a blazing fast GraphQL Server that provides an instant GraphQL API for any postgres database.
+Thin Backend is a blazing fast, universal web app backend for making realtime single page apps.
 
-## What makes it different?
+Instead of manually writing REST API endpoints or GraphQL resolvers you can use a Thin Backend server to automatically get a fully feature web application backend. Thin exposes high level functions to create, read, update and delete delete database record.
 
-**Blazing Fast, Low Latency:**
-Delight your end-users with superior speed and lowest latency. Thin Backend is built with Haskell, the most powerful functional programming language, to make your API calls return with lowest latency.
+## Code Examples
 
-**Live Queries:**
-Provide a delightful experience to your end users: With Thin Backend Live Queries your app state can be synchronized in real-time across all users.
-
-**Zero-setup Login:**
-
-Every Thin Backend project comes with zero-setup login, user management and permissions system included.
-
-Already have an existing login system? No problem, you can disable the built-in login and provide Thin Backend with a JWT.
-
-**Secure Authorization:**
-
-Thin Backend uses Postgres Policies to make sure that users can only see what they're allowed to see.
-
-Based on naming conventions Thin Backend will automatically generate the initial policies for you. You then only need to adjust the default policies based on your needs.
-
-**Powerful Schema Designer:**
-
-<img src="Guide/images/schema-designer.gif" />
-
-Thin Backend has a built-in GUI-based schema designer. The schema designer helps to quickly build the DDL statements for your database schema without remembering all the PostgreSQL syntax and data types.
-
-But keep in mind: The schema designer is just a GUI tool to edit the underlying SQL statements. The schema designer parses the SQL statements, applies changes to the syntax tree, and then writes it back.
-
-Rather work with your keyboard? You can always skip the GUI and go straight to the code editor. If you need to do something advanced which is not supported by the GUI, just manually do it with your code editor of choice.
-
-**Create Tables in a Git-like Workflow:**
-
-Whenever you add or change a table in the Schema Designer, the changes will only be applied to the in-memory schema. The actual postgres database will only be touched when you run migrations.
-
-You can think of this like in a git workflow: In git changes are only applied to the repository history when you do a git commit. In Thin Backend this git commit is running a database migration.
-
-## Documentation
-
-[You can find extensive documentation on the Thin Backend website.](https://thinbackend.app/docs/index.html)
-
-
-## Getting Started
-
-1. Start Container with Docker:
-    ```bash
-    docker run -p 8000:8000 -p 8001:8001 --pull=always -v $PWD:/home/app/Application downloads.digitallyinduced.com/digitallyinduced/thin-backend
-    ```
-
-    **Explanation of ports:**
-    - Port 8000: GraphQL server
-    - Port 8001: Dev Tools
-2. Open http://localhost:8001/
-    
-    <img src="Guide/images/screenshot.png" />
-    
-    In your browser the familiar IHP dev tools provide a GraphQL Server over IHP DataSync (WebSockets for low latency) or alternatively like other GraphQL servers via HTTP at http://localhost:8000/api/graphql (e.g. if you make a request from Postman it will just work).
-
-    It's still missing a lot, but it's enough to be useful already
-
-### Connect from JS
-
-Currently the simplest way to connect to the GraphQL server is via IHP DataSync. This will use a WebSocket as the underlying communication channel, this leads to superior latency compared to normal HTTP requests.
-
-Install IHP DataSync into your project:
-
-```bash
-npm install "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?3b66d8db44a69a2d58c7b47f18996ce1a74f38bc"
-```
-
-Then you can run a query like this:
+This example shows a simple CRUD example for building a Todo app with Thin:
 
 ```javascript
+import { useQuery, query, createRecord, updateRecord, deleteRecord, Task } from 'ihp-backend';
 
-import { useGraphQLQuery } from 'ihp-datasync/react';
-
-function HelloWorld() {
-    const result = useGraphQLQuery("{ users { id email tasks { id title } } }");
-    if (result === null) {
-        return <div>Loading</div>
-    }
+function Tasks() {
+    // `useQuery` automatically triggers a re-render on new data
+    const tasks = useQuery(query('tasks').orderBy('createdAt'));
 
     return <div>
-        {result.users.map(user => <User user={user} />)}
+        <h1>Tasks</h1>
+        {tasks.map(task => <Task task={task} key={task.id} />)}
+    </div>
+}
+
+interface TaskProps {
+    task: Task; // <- The `Task` type is provided by Thin, auto-generated from the database schema
+}
+function Task({ task }: TaskProps) {
+    const handleEdit = () => {
+        const patch = {
+            title: window.prompt('New Title:') || task.title
+        };
+
+        // `updateRecord` already updates the UI state (e.g. the <Tasks /> component above)
+        // even before the server completed the operation.
+        updateRecord('tasks', task.id, patch);
+    }
+
+    const handleDelete = () => {
+        // `deleteRecord` already hides the record from the UI state
+        // even before the server completed the operation.
+        deleteRecord('tasks', task.id);
+    }
+
+    return <div onDoubleClick={handleEdit}>
+        {task.title}
+
+        <button onClick={handleDelete}>delete</button>
+    </div>
+}
+
+function AddTaskButton() {
+    const handleClick = () => {
+        const task = {
+            title: window.prompt('Title:')
+        };
+
+        // `createRecord` already shows the new task in the UI
+        // even before the server completed the operation.
+        createRecord('tasks', task);
+    }
+
+    return <button onClick={handleClick}>Add Task</button>
+}
+
+function App() {
+    // No need for redux or other state management libs
+    // `useQuery` automatically triggers a re-render on new data
+    return <div>
+        <Tasks />
+        <AddTaskButton />
     </div>
 }
 ```
 
-Use the `query` function to run mutations:
+## Design Ideas
 
-```javascript
-import * as GraphQL from 'ihp-datasync/graphql';
+**We believe that web application development can be fundamentally simplified by working with two principles:**
 
-function AddTask() {
-    async function addTask(event) {
-        event.preventDefault();
+1. All data is realtime and reflects the latest database state: Local state management is fundamentally hard as it's dealing with distributed system problems. Best to avoid it alltogether.
+2. All database operations go through a unified standard interface, IHP DataSync in our case.
 
-        const task = {
-            title: 'Hello World',
-            body: 'hello',
-            userId: '40f1dbb4-403c-46fd-8062-fcf5362f2154'
-        };
+![](https://thinbackend.app/startpage/architecture.png)
 
-        const newTask = await GraphQL.query(`
-            mutation {
-                createTask(task: $task) { id }
-            }
-        `, { task });
-    }
+Thin Backend comes with everything needed to build blazing fast, realtime single page apps.
 
-    return <button onClick={addTask}>Add Task</button>
-}
-```
 
-## Schema
+## Feature Overview
 
-Given an SQL schema like this:
+- **Blazing Fast, Low Latency:**
+    Delight your end-users with superior speed and lowest latency. With built-in Optimistic Updates your app doesn't need to wait for the server to respond back until the changes are visible on the screen.
 
-```sql
-CREATE TABLE users (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
-    email TEXT NOT NULL,
-    password_hash TEXT NOT NULL,
-    locked_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-    failed_login_attempts INT DEFAULT 0 NOT NULL
-);
-CREATE TABLE tasks (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
-    title TEXT NOT NULL,
-    body TEXT NOT NULL,
-    user_id UUID NOT NULL
-);
-CREATE POLICY "Allow access" ON tasks USING (true) WITH CHECK (true);
-ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
-CREATE INDEX tasks_user_id_index ON tasks (user_id);
-ALTER TABLE tasks ADD CONSTRAINT tasks_ref_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION;
-```
+- **Realtime:**
+    Provide a delightful experience to your end users: With Thin Backend Live Queries your app state is synchronized in real-time across all users.
 
-Thin Backend will automatically offer these GraphQL queries and mutations:
+- **Zero-setup Login:**
+    To get your started quickly every Thin Backend project comes with zero-setup login, user management and permissions system included.
 
-```graphql
-schema {
-    query: Query
-    mutation: Mutation
-}
+    Already have an existing login system? No problem, you can disable the built-in login and provide Thin Backend with a JWT.
 
-type Query {
-    "Returns all records from the `users` table"
-    users: [User!]!
+- **Secure Authorization:**
+    Thin Backend uses Postgres Policies to make sure that users can only see what they're allowed to see.
 
-    "Returns all records from the `tasks` table"
-    tasks: [Task!]!
-}
+    Based on naming conventions Thin Backend will automatically generate the initial policies for you. You then only need to adjust the default policies based on your needs.
 
-type Mutation {
-    createUser(user: NewUser!): User!
-    updateUser(id: ID!, patch: UserPatch!): User!
-    deleteUser(id: ID!): User!
+- **Powerful Schema Designer:**
+    Thin Backend has a built-in GUI-based schema designer. The schema designer helps to quickly build the DDL statements for your database schema without remembering all the PostgreSQL syntax and data types.
 
-    createTask(task: NewTask!): Task!
-    updateTask(id: ID!, patch: TaskPatch!): Task!
-    deleteTask(id: ID!): Task!
-}
+    But keep in mind: The schema designer is just a GUI tool to edit the underlying SQL statements. The schema designer parses the SQL statements, applies changes to the syntax tree, and then writes it back.
 
-scalar UUID
-scalar Timestamp
+    Rather work with your keyboard? You can always skip the GUI and go straight to the code editor. If you need to do something advanced which is not supported by the GUI, just manually do it with your code editor of choice.
 
-type User {
-    id: ID!
-    email: String!
-    passwordHash: String!
-    lockedAt: Timestamp
-    failedLoginAttempts: Int!
-    tasks: [Task!]!
-}
-type Task {
-    id: ID!
-    title: String!
-    body: String!
-    userId: UUID!
-}
+- **Git-like Migrations:**
+    Whenever you add or change a table in the Schema Designer, the changes will only be applied to the in-memory schema. The actual postgres database will only be touched when you run migrations.
 
-input NewUser {
-    id: ID!
-    email: String!
-    passwordHash: String!
-    lockedAt: Timestamp
-    failedLoginAttempts: Int!
-}
-input NewTask {
-    id: ID!
-    title: String!
-    body: String!
-    userId: UUID!
-}
+    You can think of this like in a git workflow: In git changes are only applied to the repository history when you do a git commit. In Thin Backend this git commit is running a database migration.
 
-input UserPatch {
-    id: ID!
-    email: String!
-    passwordHash: String!
-    lockedAt: Timestamp
-    failedLoginAttempts: Int!
-}
-input TaskPatch {
-    id: ID!
-    title: String!
-    body: String!
-    userId: UUID!
-}
-```
+- **Prooven Architecture:**
+
+    Thin Backend is designed by the company that makes <a href="https://ihp.digitallyinduced.com/">IHP</a>, Haskell's most successful web framework. Thin Backend is built on top of the production-prooven IHP architecture & libraries.
+
+    IHP was recognized as a High Performer in G2's Winter 2022 Web Framework Report:
+
+    <a href="https://www.g2.com/products/ihp/reviews">
+        <img src="https://ihp.digitallyinduced.com/startpage/g2-badge.svg" alt="G2 Badge" width="96"/>
+    </a>
+
+## Documentation
+
+[You can find extensive documentation on the Thin Backend website.](https://thinbackend.app/docs)
+
+
+## Getting Started
+
+[Learn how to get started in the Getting Started Guide](https://thinbackend.app/docs/your-first-project)
+
+## Commercial Support
+
+Thin Backend is built [on the IHP platform](https://ihp.digitallyinduced.com/), Haskell's leading web framework. IHP is used in production by digitally induced since 2017. You can expect continuous support and development in the future.
+
+Additionally we're happy to provide commercial support for your Thin Backend project, either directly by digitally induced or through the di Partners network
+
+### digitally induced Partners
+
+The digitally induced Partners offer you professional IHP development, consulting and support. All partners have experience in working with IHP projects in production can help you build fast and well-architected projects.
+
+You can find details [on the Partners page](https://ihp.digitallyinduced.com/Partners).
 
 ## Example Apps
 
