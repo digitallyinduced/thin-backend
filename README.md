@@ -116,6 +116,16 @@ Thin Backend comes with everything needed to build blazing fast, realtime single
 - **Realtime:**
     Provide a delightful experience to your end users: With Thin Backend Live Queries your app state is synchronized in real-time across all users.
 
+    ```javascript
+    function Tasks() {
+        // `useQuery` always returns the latest database state
+        // The component automatically re-renders when a record is inserted,
+        // updated, or deleted in the `tasks` table
+        const tasks = useQuery(query('tasks').orderBy('createdAt'));
+
+        return <div>...</div>
+    }
+
 - **Zero-setup Login:**
     To get your started quickly every Thin Backend project comes with zero-setup login, user management and permissions system included.
 
@@ -147,6 +157,42 @@ Thin Backend comes with everything needed to build blazing fast, realtime single
     <a href="https://www.g2.com/products/ihp/reviews">
         <img src="https://ihp.digitallyinduced.com/startpage/g2-badge.svg" alt="G2 Badge" width="96"/>
     </a>
+
+- **Transactions:**
+
+    You can use `withTransaction` to run a set of operations within a database transaction. If an exception is thrown within the transaction callback, the transaction will automatically be rolled back and the exception is re-thrown. If the callback executes successfully, the transaction will automatically be committed:
+
+    ```javascript
+    import { withTransaction } from 'ihp-datasync';
+
+    await withTransaction(async transaction => {
+        const team = await transaction.createRecord('teams', { title: 'New Team' });
+        
+        const project = await transaction.createRecord('projects', {
+            title: 'Project 1',
+            teamId: team.id
+        });
+
+        return [ team, project ];
+    })
+    ```
+
+    [Learn more in the Docs](https://thinbackend.app/docs/database#transactions)
+
+- **Batch Operations:**
+    
+    You can use `createRecords`, `updateRecords` and `deleteRecords` to effiently run operations on a large
+    set of database records:
+
+    ```javascript
+    // Example:
+    const todoA = { title: 'Finish Guide', userId: '49946f4d-8a2e-4f18-a399-58e3296ecff5' };
+    const todoB = { title: 'Learn Haskell', userId: '49946f4d-8a2e-4f18-a399-58e3296ecff5' };
+
+    const todos = await createRecord('todos', [ todoA, todoB ]);
+    ```
+
+    [Learn more about Batch Operations in the Docs](https://thinbackend.app/docs/database)
 
 ## Documentation
 
