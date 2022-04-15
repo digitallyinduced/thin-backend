@@ -1,0 +1,18 @@
+{
+  "name": "ihp-backend",
+  "type": "module",
+  "version": "0.3.7",
+  "description": "",
+  "main": "ihp-auth.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?f426c55ad5536edb5da72c44c4a632edb3daa09b"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2"
+  },
+  "author": "digitally induced GmbH",
+  "license": "MIT"
+}
