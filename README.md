@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://thinbackend.app/" target="_blank">
-    <img src="Guide/images/header.png" />
+    <img src="header.png" />
   </a>
 </p>
 
