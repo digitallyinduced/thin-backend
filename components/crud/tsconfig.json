@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+        "jsx": "react",
+        "strict": true,
+        "esModuleInterop": true,
+        "typeRoots": ["./node_modules/@types"]
+    },
+    "files": [
+        "app.tsx"
+    ]
+}

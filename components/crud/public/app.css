@@ -1,0 +1,50 @@
+/* Place your app specific CSS here */
+
+.thin-crud-table {
+    width: 100%;
+    table-layout: auto;
+    border-radius: 2px;
+    -webkit-font-smoothing: antialiased;
+    overflow: scroll;
+}
+
+.thin-crud-table th {
+    font-weight: 600;
+    font-size: 14px;
+    opacity: 0.95;
+    color: #073642;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid hsl(192deg 100% 26% / 20%);
+    padding-right: 8px;
+}
+
+.thin-crud-table th:first-child, .thin-crud-table td:first-child {
+    padding-left: 1rem;
+}
+
+.thin-crud-table th:last-child, .thin-crud-table td:last-child {
+    padding-right: 1rem;
+}
+
+.thin-crud-table td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: rgb(7, 54, 66);
+    border-bottom: 1px solid hsl(192deg 100% 26% / 20%);
+
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-right: 8px;
+}
+
+.thin-crud-table-container {
+    border: 1px solid hsl(192deg 100% 26% / 20%);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.thin-crud-table-scroll-container {
+    overflow: scroll;
+}
