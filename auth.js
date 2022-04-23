@@ -1,4 +1,4 @@
-import { ihpBackendUrl, fetchAuthenticated, query, DataSyncController } from 'ihp-datasync';
+import { ihpBackendUrl, fetchAuthenticated, query, DataSyncController, initIHPBackend } from 'ihp-datasync';
 
 var currentUserId = null;
 
@@ -130,6 +130,10 @@ export async function fetchJWT(userId, accessToken) {
     }
 
     return response.text();
+}
+
+export function initThinBackend(options) {
+    initIHPBackend(options);
 }
 
 export * from 'ihp-datasync';

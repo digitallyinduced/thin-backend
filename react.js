@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { getCurrentUserId, ensureIsUser, initAuth } from 'ihp-backend/ihp-auth.js';
+import { getCurrentUserId, ensureIsUser, initAuth } from 'thin-backend/auth.js';
 import { useQuerySingleResult, AuthCompletedContext } from 'ihp-datasync/react';
 import { query } from 'ihp-datasync';
 
-export function IHPBackend({ children, requireLogin = false }) {
+export function ThinBackend({ children, requireLogin = false }) {
     const [authCompleted, setAuthCompleted] = useState(false);
 
     useEffect(() => {
