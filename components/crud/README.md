@@ -2,9 +2,16 @@
 
 The CRUD component is a table based view for quickly displaying, editing, creating and deleting database records
 
+## Install
+
+```
+npm install thin-backend-components
+```
+
 ## Usage
 
 ```javascript
+import { Crud } from 'thin-backend-components';
 
 function App() {
     return <IHPBackend requireLogin>

@@ -1,12 +1,14 @@
 {
     "compilerOptions": {
-        "noEmit": true,
+        "target": "es5",
         "jsx": "react",
         "strict": true,
         "esModuleInterop": true,
-        "typeRoots": ["./node_modules/@types"]
+        "typeRoots": ["./node_modules/@types"],
+        "declaration": true,
+        "outDir": "build"
     },
     "files": [
-        "app.tsx"
+        "index.tsx"
     ]
 }

@@ -1,29 +1,33 @@
 {
-  "name": "ihp-backend-react-starter",
-  "version": "1.0.0",
+  "name": "thin-backend-components",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./build/index.js",
+  "files": ["build/*", "crud.css"],
   "type": "module",
+  "types": "./build/index.d.ts",
   "dependencies": {
-    "@types/ihp-backend": "https://thinbackend.app/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=78e5a0a5-7713-4903-beef-8c52c40e953b&accessToken=bBXcyGqcFmwzXRnyjXgrdEjIVpZGtyZZ",
-    "dotenv": "^10.0.0",
-    "esbuild": "^0.13.1",
-    "ihp-backend": "*",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "typescript": "^4.5.3",
     "react-bootstrap": "1.6.4"
   },
-  "author": "",
-  "license": "ISC",
+  "peerDependencies": {
+    "react": ">=17.0.2"
+  },
+  "author": "digitally induced, Inc.",
+  "license": "MIT",
   "scripts": {
     "dev": "node server.js",
-    "build": "./node_modules/.bin/esbuild --define:process.env.NODE_ENV=\\\"production\\\" --define:process.env.BACKEND_URL=\\\"$BACKEND_URL\\\" app.tsx --bundle --outfile=public/app.js",
+    "build": "node_modules/.bin/tsc && cp crud.css build/",
     "typecheck": "node_modules/.bin/tsc --watch"
   },
   "devDependencies": {
     "@types/node": "^16.11.12",
     "@types/react": "^17.0.37",
-    "@types/react-dom": "^17.0.11"
+    "@types/react-dom": "^17.0.11",
+    "dotenv": "^10.0.0",
+    "esbuild": "^0.13.1",
+    "react-dom": ">=17.0.2",
+    "thin-backend": "*",
+    "typescript": "^4.6.3",
+    "@types/thin-backend": "https://thin.dev/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=6be5b77b-e3fd-4f4d-ac6c-ce8af73a480e&accessToken=tUElbKPGLqhAIFSFcPrOyPMfdANPZwdT"
   }
 }
