@@ -1,14 +1,14 @@
 {
   "name": "thin-backend",
   "type": "module",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "",
   "main": "auth.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?f97b9c921e00b7edfee5a84a883698e4081da425"
+    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?8edee31d9ad05def2cd5bcae101caf4062f11d69"
   },
   "peerDependencies": {
     "react": ">=17.0.2"
