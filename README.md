@@ -26,7 +26,7 @@
 
 Thin Backend is a blazing fast, universal web app backend for making realtime single page apps.
 
-Instead of manually writing REST API endpoints or GraphQL resolvers you can use a Thin Backend server to automatically get a fully feature web application backend. Thin exposes high level functions to create, read, update and delete delete database record.
+Instead of manually writing REST API endpoints or GraphQL resolvers you can use a Thin Backend server to automatically get a fully feature web application backend. Thin exposes high level functions to create, read, update and delete database record.
 
 ## Code Examples
 
