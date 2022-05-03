@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?657cc941eff0bf4102e57b6d6880c03e06831257"
+    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?70ec37513e9498424972bb12ccd90a9ba47b9779"
   },
   "peerDependencies": {
     "react": ">=17.0.2"
