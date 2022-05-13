@@ -67,7 +67,7 @@ export function getCurrentUserId() {
     return currentUserId;
 }
 
-export function logout() {
+export function logout(options = { redirect: null }) {
     localStorage.removeItem('ihp_jwt');
     localStorage.removeItem('ihp_user_id');
 
@@ -81,6 +81,15 @@ export function logout() {
     method.value = 'DELETE';
 
     form.appendChild(method);
+
+    if (options.redirect !== null) {
+        const method = document.createElement('input');
+        method.type = 'hidden';
+        method.name = 'redirectBack'
+        method.value = options.redirect;
+
+        form.appendChild(method);
+    }
 
     document.body.appendChild(form);
     form.submit();
