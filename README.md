@@ -217,9 +217,11 @@ You can find details [on the Partners page](https://ihp.digitallyinduced.com/Par
 
 ## Example Apps
 
-You can find some example apps inside the `Examples` directory of this repository:
+You can find some example apps here:
 
-- [Todo App](https://github.com/digitallyinduced/thin-backend/tree/master/Examples/TodoApp)
+- [Todo App](https://github.com/digitallyinduced/ihp-backend-todo-app)
+- [Chat App](https://github.com/digitallyinduced/ihp-backend-chat-example-app)
+- [Twitter Clone](https://github.com/digitallyinduced/ihp-backend-twitter-clone)
 
 ## Community
 
