@@ -148,9 +148,9 @@ Thin Backend comes with everything needed to build blazing fast, realtime single
 
     You can think of this like in a git workflow: In git changes are only applied to the repository history when you do a git commit. In Thin Backend this git commit is running a database migration.
 
-- **Prooven Architecture:**
+- **Proven Architecture:**
 
-    Thin Backend is designed by the company that makes <a href="https://ihp.digitallyinduced.com/">IHP</a>, Haskell's most successful web framework. Thin Backend is built on top of the production-prooven IHP architecture & libraries.
+    Thin Backend is designed by the company that makes <a href="https://ihp.digitallyinduced.com/">IHP</a>, Haskell's most successful web framework. Thin Backend is built on top of the production-proven IHP architecture & libraries.
 
     IHP was recognized as a High Performer in G2's Winter 2022 Web Framework Report:
 
