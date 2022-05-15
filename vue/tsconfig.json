@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES6",
         "jsx": "react",
         "strict": true,
-        "esModuleInterop": true,
+        "module": "ES6",
+        "moduleResolution": "Node",
         "typeRoots": ["./node_modules/@types"],
         "declaration": true,
         "outDir": "build",
