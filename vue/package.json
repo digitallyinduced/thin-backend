@@ -1,0 +1,22 @@
+{
+  "name": "thin-backend-vue",
+  "version": "0.1.0",
+  "description": "Vue support for thin",
+  "main": "./build/index.js",
+  "type": "module",
+  "types": "./build/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node_modules/.bin/tsc"
+  },
+  "author": "digitally induced, Inc.",
+  "license": "MIT",
+  "peerDependencies": {
+    "thin-backend": "^0.6.0",
+    "vue": "^3.2.33"
+  },
+  "devDependencies": {
+    "@types/thin-backend": "https://thin.dev/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=f61e9d25-9d27-4592-a1fe-78c9f910eb14&accessToken=HEgYWybWUMqiqKGaQCkqsWRlikVbbqUR",
+    "typescript": "^4.6.3"
+  }
+}
