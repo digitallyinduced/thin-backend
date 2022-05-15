@@ -36,7 +36,7 @@ npm install thin-backend thin-backend-vue
     ```vue
     <script setup lang="ts">
     import { createRecord, query, updateRecord, type Task } from 'thin-backend';
-    import { useQuery } from './../useQuery';
+    import { useQuery } from 'thin-backend-vue';
 
     const tasks = useQuery(query('tasks').orderBy('createdAt'));
 
