@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "jsx": "react",
+        "strict": true,
+        "module": "ES6",
+        "moduleResolution": "Node",
+        "typeRoots": ["./node_modules/@types"],
+        "declaration": true,
+        "outDir": "build",
+        "lib": [
+            "es2015", "dom"
+        ],
+        "skipLibCheck": true
+    },
+    "files": [
+        "index.ts"
+    ]
+}
