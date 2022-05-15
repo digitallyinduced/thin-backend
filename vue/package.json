@@ -1,6 +1,6 @@
 {
   "name": "thin-backend-vue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vue support for thin",
   "main": "./build/index.js",
   "type": "module",
