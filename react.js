@@ -2,15 +2,20 @@ import React, { useState, useEffect, useContext } from 'react';
 import { getCurrentUserId, ensureIsUser, initAuth } from 'thin-backend/auth.js';
 import { useQuerySingleResult, AuthCompletedContext } from 'ihp-datasync/react';
 import { query } from 'ihp-datasync';
+import { Login } from 'thin-backend-react/auth-ui';
 
 export function ThinBackend({ children, requireLogin = false }) {
     const [authCompleted, setAuthCompleted] = useState(false);
 
     useEffect(() => {
-        (requireLogin ? ensureIsUser : initAuth)().then(() => setAuthCompleted(true));
+        (requireLogin ? ensureIsUser : initAuth)().then(() => setAuthCompleted(true))
     }, [])
 
-    return React.createElement(AuthCompletedContext.Provider, { value: authCompleted }, children);
+    let childrenOrLogin = children;
+    if (requireLogin && !authCompleted) {
+        childrenOrLogin = React.createElement(Login, {}, null);
+    }
+    return React.createElement(AuthCompletedContext.Provider, { value: authCompleted }, childrenOrLogin);
 }
 
 export function useCurrentUserId() {

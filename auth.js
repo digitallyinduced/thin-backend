@@ -1,6 +1,7 @@
 import { ihpBackendUrl, fetchAuthenticated, query, DataSyncController, initIHPBackend } from 'ihp-datasync';
 
 var currentUserId = null;
+var authenticationCompletedCallback = null;
 
 export async function initAuth() {
     if (currentUserId) {
@@ -22,6 +23,10 @@ export async function initAuth() {
             });
 
             return currentUserId;
+        } else {
+            return new Promise((resolve) => {
+                authenticationCompletedCallback = resolve;
+            })
         }
     } catch (e) {
         // If we don't clear the JWT here, this will cause an infinite loop
@@ -33,6 +38,17 @@ export async function initAuth() {
     }
 
     return null;
+}
+
+export function didCompleteAuthentication(userId, jwt) {
+    localStorage.setItem('ihp_jwt', jwt);
+    localStorage.setItem('ihp_user_id', userId);
+    localStorage.setItem('ihp_login_method', 'inapp');
+
+    currentUserId = window.localStorage.getItem('ihp_user_id');
+    if (authenticationCompletedCallback) {
+        authenticationCompletedCallback();
+    }
 }
 
 async function handlePotentialInvalidJWT() {
@@ -68,31 +84,38 @@ export function getCurrentUserId() {
 }
 
 export function logout(options = { redirect: null }) {
+    const loginMethod = localStorage.getItem('ihp_login_method') || 'redirect';
+
     localStorage.removeItem('ihp_jwt');
     localStorage.removeItem('ihp_user_id');
+    localStorage.removeItem('ihp_login_method');
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = ihpBackendUrl('/DeleteSession');
-
-    const method = document.createElement('input');
-    method.type = 'hidden';
-    method.name = '_method'
-    method.value = 'DELETE';
-
-    form.appendChild(method);
-
-    if (options.redirect !== null) {
+    if (loginMethod === 'redirect') {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = ihpBackendUrl('/DeleteSession');
+    
         const method = document.createElement('input');
         method.type = 'hidden';
-        method.name = 'redirectBack'
-        method.value = options.redirect;
-
+        method.name = '_method'
+        method.value = 'DELETE';
+    
         form.appendChild(method);
+    
+        if (options.redirect !== null) {
+            const method = document.createElement('input');
+            method.type = 'hidden';
+            method.name = 'redirectBack'
+            method.value = options.redirect;
+    
+            form.appendChild(method);
+        }
+    
+        document.body.appendChild(form);
+        form.submit();
+    } else {
+        window.location.reload();
     }
-
-    document.body.appendChild(form);
-    form.submit();
 }
 
 export async function ensureIsUser() {
@@ -125,7 +148,8 @@ export async function handleRedirectBack() {
         const jwt = await fetchJWT(userId, accessToken);
         localStorage.setItem('ihp_jwt', jwt);
         localStorage.setItem('ihp_user_id', userId);
-        
+        localStorage.setItem('ihp_login_method', 'redirect');
+
         return true;
     }
 

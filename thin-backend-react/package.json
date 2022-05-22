@@ -1,0 +1,31 @@
+{
+  "name": "thin-backend-react",
+  "type": "module",
+  "version": "0.7.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "node_modules/.bin/tsc && cp auth.css build/",
+    "typecheck": "node_modules/.bin/tsc --watch"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.2",
+    "thin-backend": "*"
+  },
+  "author": "digitally induced, Inc.",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.9",
+    "@types/thin-backend": "https://thin.dev/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=6be5b77b-e3fd-4f4d-ac6c-ce8af73a480e&accessToken=tUElbKPGLqhAIFSFcPrOyPMfdANPZwdT",
+    "react": "^18.1.0",
+    "typescript": "^4.6.3"
+  },
+  "types": "./build/index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "auth.css"
+  ]
+}
