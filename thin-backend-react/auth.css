@@ -72,6 +72,9 @@
     font-weight: 500;
     text-decoration: none;
 }
+.thin-login a:focus {
+    outline: 1px solid currentColor;
+}
 
 .thin-login input {
     margin:  0; 
@@ -101,7 +104,9 @@
     font-size: 1.25rem; 
     line-height: 1.5; 
     border-radius: .3rem;
+}
 
+.thin-login .thin-auth-form-group {
     margin-bottom: 1rem;
 }
 
@@ -173,6 +178,7 @@
 .thin-login button:focus {
     background-color:  hsla(192, 81%, 36%, 1);
     border: 1px solid hsla(192, 81%, 19%, 0.1);
+    outline: 1px solid hsla(192, 81%, 19%, 1);
 }
 
 .thin-login button:disabled {
@@ -218,4 +224,15 @@
 
 .thin-login input:-webkit-autofill:hover {
     font-size: 1.25rem !important;
+}
+
+.thin-auth-invalid-feedback {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545
+}
+
+.thin-login .thin-auth-invalid {
+    border-color: #dc3545;
 }

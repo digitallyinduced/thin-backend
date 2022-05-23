@@ -5,10 +5,35 @@ import { DataSyncController, ihpBackendUrl } from 'thin-backend';
 import { didCompleteAuthentication } from 'thin-backend/auth';
 import './auth.css';
 
-interface LoginProps {
-    description?: string
+export function LoginAndSignUp() {
+    const [signUp, setSignUp] = useState(false);
+    const [confirmationParameters, setEmailConfirmationParameters] = useEmailConfirmationParameters();
+
+    if (confirmationParameters !== null) {
+        const { userId, token } = confirmationParameters;
+        return <EmailConfirmation
+            userId={userId}
+            token={token}
+            onConfirmedAlready={() => setEmailConfirmationParameters(null)}
+            onConfirmFailed={() => {
+                alert('Confirmation failed');
+                setEmailConfirmationParameters(null)
+            }}
+        />
+    }
+
+    if (signUp) {
+        return <SignUpProps onLoginClick={() => setSignUp(false)}/>
+    } else {
+        return <Login onSignUpClick={() => setSignUp(true)}/>
+    }
 }
-export function Login({ description }: LoginProps) {
+
+interface LoginProps {
+    description?: string,
+    onSignUpClick: () => void
+}
+export function Login({ description, onSignUpClick }: LoginProps) {
     return <div className="thin-login">
         <div className="thin-login-container">
             <div className="thin-login-container-inner">
@@ -25,7 +50,7 @@ export function Login({ description }: LoginProps) {
                     <LoginForm />
 
                     <p>
-                        <span className="thin-login-signup">Don't have an account?</span> <a href={ihpBackendUrl('/NewUser')}>Sign up</a>
+                        <span className="thin-login-signup">Don't have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onSignUpClick(); }}>Sign up</a>
                     </p>
                 </div>
 
@@ -70,6 +95,7 @@ function LoginForm() {
     return <form method="POST" action="#" onSubmit={onSubmit}>
         {lastError ? <LoginError errorType={lastError}/> : null}
         <input
+            className="thin-auth-form-group"
             name="email"
             value={email}
             type="email"
@@ -80,8 +106,10 @@ function LoginForm() {
             onChange={event => {
                 setEmail(event.target.value);
             }}
+            spellCheck={false}
         />
         <input
+            className="thin-auth-form-group"
             name="password"
             type="password"
             placeholder="Password"
@@ -137,4 +165,246 @@ function LoginError({ errorType }: LoginErrorProps) {
     return <div className="thin-login-alert" role="alert">
         {humanMessages[errorType]}
     </div>
+}
+
+interface SignUpProps {
+    description?: string,
+    onLoginClick: () => void,
+}
+export function SignUpProps({ description, onLoginClick }: SignUpProps) {
+    return <div className="thin-login">
+        <div className="thin-login-container">
+            <div className="thin-login-container-inner">
+                <div className="thin-login-box">
+                    <div className="thin-login-icon-container">
+                        <img src="https://testvercelreview.thinbackend.app/thin-icon-black.png"/>
+                    </div>
+
+                    <SignUpForm description={description} onLoginClick={onLoginClick}/>
+                </div>
+
+                <div className="thin-login-built-with">
+                    <a href="https://thin.dev/?ref=NewSessionFooter" target="_blank">Built with Thin Backend</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+interface CreateUserRequest {
+    tag: 'CreateUser',
+    email: string,
+    password: string
+}
+
+interface DidCreateUser {
+    tag: 'DidCreateUser',
+    userId: string,
+    emailConfirmationRequired: boolean
+}
+interface CreateUserFailed {
+    tag: 'CreateUserFailed'
+}
+
+
+function SignUpForm({ description, onLoginClick }) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setLoading] = useState(false);
+    const [validationFailures, setValidationFailures] = useState([]);
+    const [requiresEmailConfirmation, setRequiresEmailConfirmation] = useState(false);
+
+    const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+        setValidationFailures([]);
+
+        const dataSyncController = DataSyncController.getInstance();
+        const response = await dataSyncController.sendMessage<CreateUserRequest, DidCreateUser | CreateUserFailed>({ tag: 'CreateUser', email, password });
+
+        if (response.tag === 'DidCreateUser') {
+            const { userId, jwt, emailConfirmationRequired } = response;
+
+            if (emailConfirmationRequired) {
+                setRequiresEmailConfirmation(true);
+            } else {
+                didCompleteAuthentication(userId, jwt);
+            }
+        } else {
+            setValidationFailures(response.validationFailures);
+        }
+
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        // Start the connection if it's not running yet
+        // This way we have lower latency for the login
+        DataSyncController.getInstance().startConnection();
+    }, []);
+
+    const emailValidationFailure = validationFailures.find(failure => failure[0] === 'email');
+    const passwordValidationFailure = validationFailures.find(failure => failure[0] === 'passwordHash');
+
+    if (requiresEmailConfirmation) {
+        return <div>
+                <h1>Confirm your Email!</h1>
+                
+                <p>Before you can start, please quickly confirm your email address by clicking the link we've sent to {email}.</p>
+
+                <p>
+                    <a href="#" onClick={event => {
+                        event.preventDefault();
+                        onLoginClick();
+                    }}>Back to Login</a>
+                </p>
+            </div>
+
+    }
+
+    return <form method="POST" action="#" onSubmit={onSubmit}>
+        <h1>Sign Up</h1>
+
+        <p className="thin-login-description">
+            {description || 'Sign up for an account to use this application.'}
+        </p>
+        <div className="thin-auth-form-group">
+            <input
+                name="email"
+                value={email}
+                type="email"
+                placeholder="E-Mail"
+                required
+                autoFocus
+                autoComplete="email"
+                onChange={event => {
+                    setEmail(event.target.value);
+                }}
+                spellCheck={false}
+                className={emailValidationFailure ? 'thin-auth-invalid' : ''}
+            />
+            {emailValidationFailure && <div className="thin-auth-invalid-feedback">{emailValidationFailure[1]}</div>}
+        </div>
+
+        <div className="thin-auth-form-group">
+            <input
+                name="password"
+                type="password"
+                placeholder="Password"
+                autoComplete="new-password"
+                value={password}
+                onChange={event => {
+                    setPassword(event.target.value);
+                }}
+                className={passwordValidationFailure ? 'thin-auth-invalid' : ''}
+            />
+            {passwordValidationFailure && <div className="thin-auth-invalid-feedback">{passwordValidationFailure[1]}</div>}
+        </div>
+
+        <div>
+            <button type="submit" disabled={isLoading}>
+                {isLoading
+                    ? <span className="thin-login-spinner-border thin-login-spinner-border-sm" role="status" aria-hidden="true"></span>
+                    : "Sign Up"
+                }
+            </button>
+        </div>
+
+        <p>
+            <span className="thin-login-signup">Already have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onLoginClick(); }}>Login</a>
+        </p>
+    </form>
+}
+
+
+interface DidConfirmUser {
+    tag: 'DidConfirmUser',
+    jwt: string
+}
+
+interface DidConfirmUserAlready {
+    tag: 'DidConfirmUserAlready'
+}
+
+interface ConfirmUserFailed {
+    tag: 'ConfirmUserFailed'
+}
+
+function confirmUser(userId: string, token: string): Promise<DidConfirmUser | ConfirmUserFailed | DidConfirmUserAlready> {
+    const dataSyncController = DataSyncController.getInstance();
+    return dataSyncController.sendMessage<DidConfirmUser | ConfirmUserFailed>({ tag: 'ConfirmUser', userId, token });
+}
+
+export function EmailConfirmation({ userId, token, onConfirmedAlready, onConfirmFailed }: SignUpProps) {
+    useEffect(() => {
+        confirmUser(userId, token).then(result => {
+            if (result.tag === 'DidConfirmUser') {
+                didCompleteAuthentication(userId, result.jwt);
+            } else if (result.tag === 'DidConfirmUserAlready') {
+                onConfirmedAlready();
+            } else if (result.tag === 'ConfirmUserFailed') {
+                onConfirmFailed();
+            }
+        });
+    })
+
+    return <div className="thin-login">
+        <div className="thin-login-container">
+            <div className="thin-login-container-inner">
+                <div className="thin-login-box">
+                    <div className="thin-login-icon-container">
+                        <img src="https://testvercelreview.thinbackend.app/thin-icon-black.png"/>
+                    </div>
+
+                    <h1>
+                        Confirming your Email...
+                    </h1>
+
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <span className="thin-login-spinner-border thin-login-spinner-border" role="status" aria-hidden="true"></span>
+                    </div>
+                </div>
+
+                <div className="thin-login-built-with">
+                    <a href="https://thin.dev/?ref=NewSessionFooter" target="_blank">Built with Thin Backend</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+interface ConfirmationParameters {
+    userId: string,
+    token: string
+}
+
+function extractConfirmationParametersFromUrl(): ConfirmationParameters | null {
+    const query = new URLSearchParams(window.location.search);
+
+    if (query.has('email-confirmation') && query.has('userId') && query.has('token')) {
+        const userId = query.get('userId');
+        const token = query.get('token');
+
+        // Remove parameters from the URL
+        query.delete('email-confirmation');
+        query.delete('userId');
+        query.delete('token');
+        const newQuery = query.toString();
+
+        window.history.pushState({}, document.title, window.location.pathname + (newQuery.length > 0 ? '?' + newQuery : ''));
+
+        return { userId, token };
+    }
+
+    return null;
+}
+
+function useEmailConfirmationParameters() {
+    const [emailConfirmationParameters, setEmailConfirmationParameters] = useState(null);
+    useEffect(() => {
+        setEmailConfirmationParameters(extractConfirmationParametersFromUrl());
+    }, []);
+
+    return [emailConfirmationParameters, setEmailConfirmationParameters];
 }
