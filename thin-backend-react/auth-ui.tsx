@@ -124,7 +124,7 @@ function LoginForm() {
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <LoadingSpinner />
+                    ? <LoadingSpinner small/>
                     : "Login"
                 }
             </button>
@@ -267,7 +267,7 @@ function SignUpForm({ description, onLoginClick }) {
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <LoadingSpinner />
+                    ? <LoadingSpinner small/>
                     : "Sign Up"
                 }
             </button>
@@ -306,7 +306,7 @@ export function EmailConfirmation({ userId, token, onConfirmedAlready, onConfirm
                     </h1>
 
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <span className="thin-login-spinner-border thin-login-spinner-border" role="status" aria-hidden="true"></span>
+                        <LoadingSpinner />
                     </div>
                 </div>
 
@@ -353,6 +353,10 @@ function useEmailConfirmationParameters() {
     return [emailConfirmationParameters, setEmailConfirmationParameters];
 }
 
-function LoadingSpinner() {
-    return <span className="thin-login-spinner-border thin-login-spinner-border-sm" role="status" aria-hidden="true"></span>
+interface LoadingSpinnerProps {
+    small: boolean;
+}
+function LoadingSpinner({ small = false }: LoadingSpinnerProps) {
+    const className = 'thin-login-spinner-border' + (small ? ' thin-login-spinner-border-sm' : '');
+    return <span className={className} role="status" aria-hidden="true"></span>
 }
