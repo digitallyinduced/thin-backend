@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "esnext",
         "jsx": "react",
         "strict": false,
         "esModuleInterop": true,
@@ -13,6 +13,7 @@
     },
     "files": [
         "index.tsx",
-        "auth-ui.tsx"
+        "auth-ui.tsx",
+        "auth-api.ts"
     ]
 }
