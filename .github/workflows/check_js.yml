@@ -1,0 +1,22 @@
+name: Check JavaScript
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.4
+      name: 'Checkout'
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+      name: 'Setup Node'
+    - run: npm install
+      name: 'Install NPM Packages'
+    - run: node_modules/.bin/tsc --checkJs --noEmit -t esnext --moduleResolution node index.js
+      name: 'Typechecking'
+    - run: NODE_OPTIONS=--experimental-vm-modules ./node_modules/.bin/jest
+      name: 'Running Tests'
