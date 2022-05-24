@@ -37,27 +37,27 @@ interface LoginProps {
     appIcon?: string
 }
 export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }: LoginProps) {
-    return <div className="thin-login">
-        <div className="thin-login-container">
-            <div className="thin-login-container-inner">
-                <div className="thin-login-box">
-                    <div className="thin-login-icon-container">
+    return <div className="thin-auth">
+        <div className="thin-auth-container">
+            <div className="thin-auth-container-inner">
+                <div className="thin-auth-box">
+                    <div className="thin-auth-icon-container">
                         <img src={appIcon}/>
                     </div>
 
                     <h1>Welcome</h1>
 
-                    <p className="thin-login-description">
+                    <p className="thin-auth-description">
                         {description || 'Please log in to continue with the application.'}
                     </p>
                     <LoginForm />
 
                     <p>
-                        <span className="thin-login-signup">Don't have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onSignUpClick(); }}>Sign up</a>
+                        <span className="thin-auth-signup">Don't have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onSignUpClick(); }}>Sign up</a>
                     </p>
                 </div>
 
-                <div className="thin-login-built-with">
+                <div className="thin-auth-built-with">
                     <a href="https://thin.dev/?ref=NewSessionFooter" target="_blank">Built with Thin Backend</a>
                 </div>
             </div>
@@ -146,7 +146,7 @@ function LoginError({ errorType }: LoginErrorProps) {
         'InvalidCredentials': 'Invalid Credentials'
     };
 
-    return <div className="thin-login-alert" role="alert">
+    return <div className="thin-auth-alert" role="alert">
         {humanMessages[errorType]}
     </div>
 }
@@ -157,18 +157,18 @@ interface SignUpProps {
     appIcon?: string
 }
 export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }: SignUpProps) {
-    return <div className="thin-login">
-        <div className="thin-login-container">
-            <div className="thin-login-container-inner">
-                <div className="thin-login-box">
-                    <div className="thin-login-icon-container">
+    return <div className="thin-auth">
+        <div className="thin-auth-container">
+            <div className="thin-auth-container-inner">
+                <div className="thin-auth-box">
+                    <div className="thin-auth-icon-container">
                         <img src={appIcon}/>
                     </div>
 
                     <SignUpForm description={description} onLoginClick={onLoginClick}/>
                 </div>
 
-                <div className="thin-login-built-with">
+                <div className="thin-auth-built-with">
                     <a href="https://thin.dev/?ref=NewSessionFooter" target="_blank">Built with Thin Backend</a>
                 </div>
             </div>
@@ -232,7 +232,7 @@ function SignUpForm({ description, onLoginClick }) {
     return <form method="POST" action="#" onSubmit={onSubmit}>
         <h1>Sign Up</h1>
 
-        <p className="thin-login-description">
+        <p className="thin-auth-description">
             {description || 'Sign up for an account to use this application.'}
         </p>
         <div className="thin-auth-form-group">
@@ -278,7 +278,7 @@ function SignUpForm({ description, onLoginClick }) {
         </div>
 
         <p>
-            <span className="thin-login-signup">Already have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onLoginClick(); }}>Login</a>
+            <span className="thin-auth-signup">Already have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onLoginClick(); }}>Login</a>
         </p>
     </form>
 }
@@ -297,11 +297,11 @@ export function EmailConfirmation({ userId, token, onConfirmedAlready, onConfirm
         });
     })
 
-    return <div className="thin-login">
-        <div className="thin-login-container">
-            <div className="thin-login-container-inner">
-                <div className="thin-login-box">
-                    <div className="thin-login-icon-container">
+    return <div className="thin-auth">
+        <div className="thin-auth-container">
+            <div className="thin-auth-container-inner">
+                <div className="thin-auth-box">
+                    <div className="thin-auth-icon-container">
                         <img src="https://testvercelreview.thinbackend.app/thin-icon-black.png"/>
                     </div>
 
@@ -314,7 +314,7 @@ export function EmailConfirmation({ userId, token, onConfirmedAlready, onConfirm
                     </div>
                 </div>
 
-                <div className="thin-login-built-with">
+                <div className="thin-auth-built-with">
                     <a href="https://thin.dev/?ref=NewSessionFooter" target="_blank">Built with Thin Backend</a>
                 </div>
             </div>
@@ -361,6 +361,6 @@ interface LoadingSpinnerProps {
     small: boolean;
 }
 function LoadingSpinner({ small = false }: LoadingSpinnerProps) {
-    const className = 'thin-login-spinner-border' + (small ? ' thin-login-spinner-border-sm' : '');
+    const className = 'thin-auth-spinner-border' + (small ? ' thin-auth-spinner-border-sm' : '');
     return <span className={className} role="status" aria-hidden="true"></span>
 }
