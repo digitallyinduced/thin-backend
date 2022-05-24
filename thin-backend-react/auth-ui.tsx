@@ -124,7 +124,7 @@ function LoginForm() {
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <span className="thin-login-spinner-border thin-login-spinner-border-sm" role="status" aria-hidden="true"></span>
+                    ? <LoadingSpinner />
                     : "Login"
                 }
             </button>
@@ -267,7 +267,7 @@ function SignUpForm({ description, onLoginClick }) {
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <span className="thin-login-spinner-border thin-login-spinner-border-sm" role="status" aria-hidden="true"></span>
+                    ? <LoadingSpinner />
                     : "Sign Up"
                 }
             </button>
@@ -351,4 +351,8 @@ function useEmailConfirmationParameters() {
     }, []);
 
     return [emailConfirmationParameters, setEmailConfirmationParameters];
+}
+
+function LoadingSpinner() {
+    return <span className="thin-login-spinner-border thin-login-spinner-border-sm" role="status" aria-hidden="true"></span>
 }
