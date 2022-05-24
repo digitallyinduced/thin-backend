@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "jsx": "react",
+        "strict": false,
+        "esModuleInterop": true,
+        "typeRoots": ["./types", "./node_modules/@types"],
+        "declaration": true,
+        "skipLibCheck": true,
+        "lib": [
+            "es2015", "dom"
+        ],
+    },
+    "files": [
+        "index.tsx",
+        "auth-ui.tsx",
+        "auth-api.ts"
+    ]
+}
