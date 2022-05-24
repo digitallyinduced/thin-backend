@@ -19,7 +19,6 @@
   "devDependencies": {
     "@types/react": "^18.0.9",
     "@types/thin-backend": "https://thin.dev/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=6be5b77b-e3fd-4f4d-ac6c-ce8af73a480e&accessToken=tUElbKPGLqhAIFSFcPrOyPMfdANPZwdT",
-    "react": "^18.1.0",
     "typescript": "^4.6.3"
   },
   "types": "./build/index.d.ts",
