@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 // @ts-expect-error
 import { DataSyncController, ihpBackendUrl } from 'thin-backend';
 import { didCompleteAuthentication } from 'thin-backend/auth';
-import './auth.css';
 import * as AuthApi from './auth-api';
 
 export function LoginAndSignUp() {
