@@ -5,6 +5,8 @@ import { DataSyncController, ihpBackendUrl } from 'thin-backend';
 import { didCompleteAuthentication } from 'thin-backend/auth.js';
 import * as AuthApi from './auth-api.js';
 
+const DEFAULT_APP_ICON = 'https://thin-backend-prod.s3.amazonaws.com/public-static/thin-icon-black.png';
+
 export function LoginAndSignUp() {
     const [signUp, setSignUp] = useState(false);
     const [confirmationParameters, setEmailConfirmationParameters] = useEmailConfirmationParameters();
@@ -31,15 +33,16 @@ export function LoginAndSignUp() {
 
 interface LoginProps {
     description?: string,
-    onSignUpClick: () => void
+    onSignUpClick: () => void,
+    appIcon?: string
 }
-export function Login({ description, onSignUpClick }: LoginProps) {
+export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }: LoginProps) {
     return <div className="thin-login">
         <div className="thin-login-container">
             <div className="thin-login-container-inner">
                 <div className="thin-login-box">
                     <div className="thin-login-icon-container">
-                        <img src="https://testvercelreview.thinbackend.app/thin-icon-black.png"/>
+                        <img src={appIcon}/>
                     </div>
 
                     <h1>Welcome</h1>
@@ -151,14 +154,15 @@ function LoginError({ errorType }: LoginErrorProps) {
 interface SignUpProps {
     description?: string,
     onLoginClick: () => void,
+    appIcon?: string
 }
-export function SignUpProps({ description, onLoginClick }: SignUpProps) {
+export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }: SignUpProps) {
     return <div className="thin-login">
         <div className="thin-login-container">
             <div className="thin-login-container-inner">
                 <div className="thin-login-box">
                     <div className="thin-login-icon-container">
-                        <img src="https://testvercelreview.thinbackend.app/thin-icon-black.png"/>
+                        <img src={appIcon}/>
                     </div>
 
                     <SignUpForm description={description} onLoginClick={onLoginClick}/>
