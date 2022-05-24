@@ -1,4 +1,5 @@
-import { ihpBackendUrl, fetchAuthenticated, query, DataSyncController, initIHPBackend } from 'ihp-datasync';
+import { DataSyncController } from './datasync.js';
+import { query, ihpBackendUrl, fetchAuthenticated } from './querybuilder.js';
 
 var currentUserId = null;
 var authenticationCompletedCallback = null;
@@ -164,9 +165,3 @@ export async function fetchJWT(userId, accessToken) {
 
     return response.text();
 }
-
-export function initThinBackend(options) {
-    initIHPBackend(options);
-}
-
-export * from 'ihp-datasync';

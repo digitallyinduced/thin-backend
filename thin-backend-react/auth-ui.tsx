@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 // @ts-expect-error
 import { DataSyncController, ihpBackendUrl } from 'thin-backend';
-import { didCompleteAuthentication } from 'thin-backend/auth';
-import * as AuthApi from './auth-api';
+import { didCompleteAuthentication } from 'thin-backend/auth.js';
+import * as AuthApi from './auth-api.js';
 
 export function LoginAndSignUp() {
     const [signUp, setSignUp] = useState(false);

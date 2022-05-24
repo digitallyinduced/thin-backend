@@ -1,18 +1,18 @@
 {
   "name": "thin-backend",
   "type": "module",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "",
-  "main": "auth.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?a9a2e567790ce2c4177261c2a46d38b59cbfe593"
   },
   "peerDependencies": {
     "react": ">=17.0.2"
   },
   "author": "digitally induced, Inc.",
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "*.js"
+  ]
 }

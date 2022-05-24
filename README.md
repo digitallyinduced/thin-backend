@@ -163,7 +163,7 @@ Thin Backend comes with everything needed to build blazing fast, realtime single
     You can use `withTransaction` to run a set of operations within a database transaction. If an exception is thrown within the transaction callback, the transaction will automatically be rolled back and the exception is re-thrown. If the callback executes successfully, the transaction will automatically be committed:
 
     ```javascript
-    import { withTransaction } from 'ihp-datasync';
+    import { withTransaction } from 'thin-backend';
 
     await withTransaction(async transaction => {
         const team = await transaction.createRecord('teams', { title: 'New Team' });
