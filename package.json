@@ -14,5 +14,9 @@
   "license": "MIT",
   "files": [
     "*.js"
-  ]
+  ],
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "typescript": "^4.6.4"
+  }
 }
