@@ -358,7 +358,7 @@ function useEmailConfirmationParameters() {
 }
 
 interface LoadingSpinnerProps {
-    small: boolean;
+    small?: boolean;
 }
 function LoadingSpinner({ small = false }: LoadingSpinnerProps) {
     const className = 'thin-auth-spinner-border' + (small ? ' thin-auth-spinner-border-sm' : '');
