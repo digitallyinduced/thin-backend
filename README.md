@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://thinbackend.app/" target="_blank">
+  <a href="https://thin.dev/" target="_blank">
     <img src="header.png" />
   </a>
 </p>
@@ -13,11 +13,11 @@
 </p>
 
 <p align="center">
-  <a href="https://thinbackend.app/" target="_blank">
+  <a href="https://thin.dev/" target="_blank">
     Website
   </a>
   |
-  <a href="https://thinbackend.app/docs" target="_blank">
+  <a href="https://thin.dev/docs" target="_blank">
     Documentation
   </a>
 </p>
@@ -177,7 +177,7 @@ Thin Backend comes with everything needed to build blazing fast, realtime single
     })
     ```
 
-    [Learn more in the Docs](https://thinbackend.app/docs/database#transactions)
+    [Learn more in the Docs](https://thin.dev/docs/database#transactions)
 
 - **Batch Operations:**
     
@@ -192,16 +192,16 @@ Thin Backend comes with everything needed to build blazing fast, realtime single
     const todos = await createRecord('todos', [ todoA, todoB ]);
     ```
 
-    [Learn more about Batch Operations in the Docs](https://thinbackend.app/docs/database)
+    [Learn more about Batch Operations in the Docs](https://thin.dev/docs/database)
 
 ## Documentation
 
-[You can find extensive documentation on the Thin Backend website.](https://thinbackend.app/docs)
+[You can find extensive documentation on the Thin Backend website.](https://thin.dev/docs)
 
 
 ## Getting Started
 
-[Learn how to get started in the Getting Started Guide](https://thinbackend.app/docs/your-first-project)
+[Learn how to get started in the Getting Started Guide](https://thin.dev/docs/your-first-project)
 
 ## Commercial Support
 
