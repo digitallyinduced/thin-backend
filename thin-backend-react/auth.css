@@ -1,22 +1,22 @@
-.thin-login {
+.thin-auth {
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     accent-color: hsla(192, 81%, 26%, 1);
 }
 
-.thin-login * {
+.thin-auth * {
     box-sizing: border-box;
 }
 
-.thin-login-container {
+.thin-auth-container {
     display: flex;
     align-items: center;
 }
 
-.thin-login-container-inner {
+.thin-auth-container-inner {
     width: 100%;
 }
 
-.thin-login-box {
+.thin-auth-box {
     max-width: 400px;
     margin-left: auto;
     margin-right: auto;
@@ -26,57 +26,57 @@
     border-radius: 0.25rem;
 }
 
-.thin-login-icon-container {
+.thin-auth-icon-container {
     text-align: center;
     margin-bottom: 1rem;
 }
 
-.thin-login-icon-container img {
+.thin-auth-icon-container img {
     width:  64px;
 }
 
-.thin-login h1 {
+.thin-auth h1 {
     font-size: 24px;
     font-weight: 400;
     text-align: center;
     margin-bottom: 1rem;
 }
 
-.thin-login-description {
+.thin-auth-description {
     text-align: center;
 }
 
-.thin-login-signup {
+.thin-auth-signup {
     color: #6c757d;
     margin-right: 0.25rem;
 }
 
-.thin-login-built-with {
+.thin-auth-built-with {
     text-align: center;
     margin-top: 3rem;
 }
 
-.thin-login .thin-login-built-with a {
+.thin-auth .thin-auth-built-with a {
     color: #6c757d;
     font-size: 12px;
     font-weight: 400;
 }
 
-.thin-login p {
+.thin-auth p {
     color: hsla(196, 13%, 40%, 1);
     font-size: 14px;
 }
 
-.thin-login a {
+.thin-auth a {
     color: hsla(192, 81%, 26%, 1);
     font-weight: 500;
     text-decoration: none;
 }
-.thin-login a:focus {
+.thin-auth a:focus {
     outline: 1px solid currentColor;
 }
 
-.thin-login input {
+.thin-auth input {
     margin:  0; 
     font-family:  inherit; 
     font-size:  inherit; 
@@ -106,18 +106,18 @@
     border-radius: .3rem;
 }
 
-.thin-login .thin-auth-form-group {
+.thin-auth .thin-auth-form-group {
     margin-bottom: 1rem;
 }
 
-.thin-login input:focus {
+.thin-auth input:focus {
     color: #495057; 
     background-color: #fff; 
     border-color: hsla(192, 81%, 26%, 1); 
     outline: 0; 
 }
 
-.thin-login button {
+.thin-auth button {
     border-radius:    0;
     margin:   0; 
     font-family:   inherit; 
@@ -158,41 +158,41 @@
     display: block;
 } 
 
-.thin-login button, .thin-login button:disabled {
+.thin-auth button, .thin-auth button:disabled {
     background-color:  hsla(192, 81%, 26%, 1);
     border: 1px solid hsla(192, 81%, 19%, 0.1);
     font-weight: 500;
     border-radius: 8px;
 }
 
-.thin-login button:not(:disabled):hover {
+.thin-auth button:not(:disabled):hover {
     background-color: hsla(192, 81%, 26%, 0.8);
     border: 1px solid hsla(192, 81%, 19%, 0.1);
 }
 
-.thin-login button:not(:disabled):active {
+.thin-auth button:not(:disabled):active {
     background-color: hsla(192, 81%, 26%, 0.8);
     border: 1px solid hsla(192, 81%, 19%, 0.1);
 }
 
-.thin-login button:focus {
+.thin-auth button:focus {
     background-color:  hsla(192, 81%, 36%, 1);
     border: 1px solid hsla(192, 81%, 19%, 0.1);
     outline: 1px solid hsla(192, 81%, 19%, 1);
 }
 
-.thin-login button:disabled {
+.thin-auth button:disabled {
     opacity: 0.65;
 }
 
-@keyframes thin-login-spinner-border {
+@keyframes thin-auth-spinner-border {
     to {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg)
     }
 }
 
-.thin-login-spinner-border {
+.thin-auth-spinner-border {
     display: inline-block;
     width: 2rem;
     height: 2rem;
@@ -200,16 +200,16 @@
     border: .25em solid currentColor;
     border-right-color: transparent;
     border-radius: 50%;
-    animation: thin-login-spinner-border .75s linear infinite
+    animation: thin-auth-spinner-border .75s linear infinite
 }
 
-.thin-login-spinner-border-sm {
+.thin-auth-spinner-border-sm {
     width: 1rem;
     height: 1rem;
     border-width: .2em
 }
 
-.thin-login-alert {
+.thin-auth-alert {
     position: relative;
     padding: .75rem 1.25rem;
     margin-bottom: 1rem;
@@ -222,7 +222,7 @@
 }
 
 
-.thin-login input:-webkit-autofill:hover {
+.thin-auth input:-webkit-autofill:hover {
     font-size: 1.25rem !important;
 }
 
@@ -233,6 +233,6 @@
     color: #dc3545
 }
 
-.thin-login .thin-auth-invalid {
+.thin-auth .thin-auth-invalid {
     border-color: #dc3545;
 }
