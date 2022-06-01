@@ -25,7 +25,7 @@ export function LoginAndSignUp() {
     }
 
     if (signUp) {
-        return <SignUpProps onLoginClick={() => setSignUp(false)}/>
+        return <SignUp onLoginClick={() => setSignUp(false)}/>
     } else {
         return <Login onSignUpClick={() => setSignUp(true)}/>
     }
@@ -163,11 +163,11 @@ interface SignUpProps {
      * If nothing is specified, the Thin logo is used as the default icon.
      * 
      * @example
-     * <SignUpProps appIcon={<img src="/custom-icon.png" />} />
+     * <SignUp appIcon={<img src="/custom-icon.png" />} />
      */
     appIcon?: React.ReactNode
 }
-export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }: SignUpProps) {
+export function SignUp({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }: SignUpProps) {
     return <div className="thin-auth">
         <div className="thin-auth-container">
             <div className="thin-auth-container-inner">
