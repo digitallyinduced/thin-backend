@@ -5,7 +5,7 @@ import { DataSyncController, ihpBackendUrl } from 'thin-backend';
 import { didCompleteAuthentication } from 'thin-backend/auth.js';
 import * as AuthApi from './auth-api.js';
 
-const DEFAULT_APP_ICON = 'https://thin-backend-prod.s3.amazonaws.com/public-static/thin-icon-black.png';
+const DEFAULT_APP_ICON = <img src="https://thin-backend-prod.s3.amazonaws.com/public-static/thin-icon-black.png" width={64} height={26.875}/>;
 
 export function LoginAndSignUp() {
     const [signUp, setSignUp] = useState(false);
@@ -34,7 +34,16 @@ export function LoginAndSignUp() {
 interface LoginProps {
     description?: string,
     onSignUpClick: () => void,
-    appIcon?: string
+    
+    /**
+     * An image shown above the title in the login form.
+     * 
+     * If nothing is specified, the Thin logo is used as the default icon.
+     * 
+     * @example
+     * <Login appIcon={<img src="/custom-icon.png" />} />
+     */
+    appIcon?: React.ReactNode
 }
 export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }: LoginProps) {
     return <div className="thin-auth">
@@ -42,7 +51,7 @@ export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }
             <div className="thin-auth-container-inner">
                 <div className="thin-auth-box">
                     <div className="thin-auth-icon-container">
-                        <img src={appIcon}/>
+                        {appIcon}
                     </div>
 
                     <h1>Welcome</h1>
@@ -147,7 +156,16 @@ function LoginError({ errorType }: LoginErrorProps) {
 interface SignUpProps {
     description?: string,
     onLoginClick: () => void,
-    appIcon?: string
+    
+    /**
+     * An image shown above the title in the signup form.
+     * 
+     * If nothing is specified, the Thin logo is used as the default icon.
+     * 
+     * @example
+     * <SignUpProps appIcon={<img src="/custom-icon.png" />} />
+     */
+    appIcon?: React.ReactNode
 }
 export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }: SignUpProps) {
     return <div className="thin-auth">
@@ -155,7 +173,7 @@ export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_I
             <div className="thin-auth-container-inner">
                 <div className="thin-auth-box">
                     <div className="thin-auth-icon-container">
-                        <img src={appIcon}/>
+                        {appIcon}
                     </div>
 
                     <SignUpForm description={description} onLoginClick={onLoginClick}/>
