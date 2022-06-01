@@ -187,7 +187,7 @@ export function SignUp({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }
     </div>
 }
 
-function SignUpForm({ description, onLoginClick }) {
+function SignUpForm({ description = 'Sign up for an account to use this application.', onLoginClick }) {
     const [isLoading, setLoading] = useState(false);
     const [validationFailures, setValidationFailures] = useState([]);
     const [requiresEmailConfirmation, setRequiresEmailConfirmation] = useState(false);
@@ -246,7 +246,7 @@ function SignUpForm({ description, onLoginClick }) {
         <h1>Sign Up</h1>
 
         <p className="thin-auth-description">
-            {description || 'Sign up for an account to use this application.'}
+            {description}
         </p>
         <div className="thin-auth-form-group">
             <input
