@@ -170,14 +170,16 @@ export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_I
 }
 
 function SignUpForm({ description, onLoginClick }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [validationFailures, setValidationFailures] = useState([]);
     const [requiresEmailConfirmation, setRequiresEmailConfirmation] = useState(false);
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
+        
+        const form = event.target as any;
+        const { email, password } = form;
+
         setLoading(true);
         setValidationFailures([]);
 
@@ -210,7 +212,7 @@ function SignUpForm({ description, onLoginClick }) {
         return <div>
                 <h1>Confirm your Email!</h1>
                 
-                <p>Before you can start, please quickly confirm your email address by clicking the link we've sent to {email}.</p>
+                <p>Before you can start, please quickly confirm your email address by clicking the link we've sent to your email address.</p>
 
                 <p>
                     <a href="#" onClick={event => {
@@ -231,15 +233,11 @@ function SignUpForm({ description, onLoginClick }) {
         <div className="thin-auth-form-group">
             <input
                 name="email"
-                value={email}
                 type="email"
                 placeholder="E-Mail"
                 required
                 autoFocus
                 autoComplete="email"
-                onChange={event => {
-                    setEmail(event.target.value);
-                }}
                 spellCheck={false}
                 className={emailValidationFailure ? 'thin-auth-invalid' : ''}
             />
@@ -252,10 +250,6 @@ function SignUpForm({ description, onLoginClick }) {
                 type="password"
                 placeholder="Password"
                 autoComplete="new-password"
-                value={password}
-                onChange={event => {
-                    setPassword(event.target.value);
-                }}
                 className={passwordValidationFailure ? 'thin-auth-invalid' : ''}
             />
             {passwordValidationFailure && <div className="thin-auth-invalid-feedback">{passwordValidationFailure[1]}</div>}
