@@ -43,9 +43,17 @@ interface LoginProps {
      * @example
      * <Login appIcon={<img src="/custom-icon.png" />} />
      */
-    appIcon?: React.ReactNode
+    appIcon?: React.ReactNode,
+    
+    /**
+     * Loading spinner shown while the login form is loading.
+     * 
+     * @example
+     * <Login loadingSpinner={<CustomLoadingSpinner />} />
+     */
+    loadingSpinner?: React.ReactNode,
 }
-export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }: LoginProps) {
+export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON, loadingSpinner = <LoadingSpinner small/> }: LoginProps) {
     return <div className="thin-auth">
         <div className="thin-auth-container">
             <div className="thin-auth-container-inner">
@@ -59,7 +67,7 @@ export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }
                     <p className="thin-auth-description">
                         {description || 'Please log in to continue with the application.'}
                     </p>
-                    <LoginForm />
+                    <LoginForm loadingSpinner={loadingSpinner}/>
 
                     <p>
                         <span className="thin-auth-signup">Don't have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onSignUpClick(); }}>Sign up</a>
@@ -74,7 +82,7 @@ export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }
     </div>
 }
 
-function LoginForm() {
+function LoginForm({ loadingSpinner }) {
     const [isLoading, setLoading] = useState(false);
     const [lastError, setLastError] = useState<'UserLocked' | 'UserUnconfirmed' | 'InvalidCredentials' | null>(null);
 
@@ -129,7 +137,7 @@ function LoginForm() {
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <LoadingSpinner small/>
+                    ? loadingSpinner
                     : "Login"
                 }
             </button>
@@ -165,9 +173,17 @@ interface SignUpProps {
      * @example
      * <SignUp appIcon={<img src="/custom-icon.png" />} />
      */
-    appIcon?: React.ReactNode
+    appIcon?: React.ReactNode,
+    
+    /**
+     * Loading spinner shown while the sign up form is loading.
+     * 
+     * @example
+     * <SignUp loadingSpinner={<CustomLoadingSpinner />} />
+     */
+     loadingSpinner?: React.ReactNode,
 }
-export function SignUp({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }: SignUpProps) {
+export function SignUp({ description, onLoginClick, appIcon = DEFAULT_APP_ICON, loadingSpinner = <LoadingSpinner small/> }: SignUpProps) {
     return <div className="thin-auth">
         <div className="thin-auth-container">
             <div className="thin-auth-container-inner">
@@ -176,7 +192,7 @@ export function SignUp({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }
                         {appIcon}
                     </div>
 
-                    <SignUpForm description={description} onLoginClick={onLoginClick}/>
+                    <SignUpForm description={description} onLoginClick={onLoginClick} loadingSpinner={loadingSpinner}/>
                 </div>
 
                 <div className="thin-auth-built-with">
@@ -187,7 +203,7 @@ export function SignUp({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }
     </div>
 }
 
-function SignUpForm({ description = 'Sign up for an account to use this application.', onLoginClick }) {
+function SignUpForm({ description = 'Sign up for an account to use this application.', onLoginClick, loadingSpinner }) {
     const [isLoading, setLoading] = useState(false);
     const [validationFailures, setValidationFailures] = useState([]);
     const [requiresEmailConfirmation, setRequiresEmailConfirmation] = useState(false);
@@ -276,7 +292,7 @@ function SignUpForm({ description = 'Sign up for an account to use this applicat
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <LoadingSpinner small/>
+                    ? loadingSpinner
                     : "Sign Up"
                 }
             </button>
