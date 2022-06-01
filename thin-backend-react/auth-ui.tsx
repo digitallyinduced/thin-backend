@@ -66,12 +66,13 @@ export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }
 }
 
 function LoginForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [lastError, setLastError] = useState<'UserLocked' | 'UserUnconfirmed' | 'InvalidCredentials' | null>(null);
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+        const form = event.target as any;
+        const { email, password } = form;
+
         event.preventDefault();
         setLoading(true);
         setLastError(null);
@@ -99,15 +100,11 @@ function LoginForm() {
         <input
             className="thin-auth-form-group"
             name="email"
-            value={email}
             type="email"
             placeholder="E-Mail"
             required
             autoFocus
             autoComplete="email"
-            onChange={event => {
-                setEmail(event.target.value);
-            }}
             spellCheck={false}
         />
         <input
@@ -116,10 +113,6 @@ function LoginForm() {
             type="password"
             placeholder="Password"
             autoComplete="current-password"
-            value={password}
-            onChange={event => {
-                setPassword(event.target.value);
-            }}
         />
         <p>
             <a href="#">Forgot your password?</a>
