@@ -4,7 +4,7 @@ import { query, ihpBackendUrl, fetchAuthenticated } from './querybuilder.js';
 var currentUserId = null;
 var authenticationCompletedCallback = null;
 
-export async function initAuth() {
+export async function initAuth(onCompletedCallback) {
     if (currentUserId) {
         return currentUserId;
     }
@@ -25,9 +25,7 @@ export async function initAuth() {
 
             return currentUserId;
         } else {
-            return new Promise((resolve) => {
-                authenticationCompletedCallback = resolve;
-            })
+            authenticationCompletedCallback = onCompletedCallback;
         }
     } catch (e) {
         // If we don't clear the JWT here, this will cause an infinite loop

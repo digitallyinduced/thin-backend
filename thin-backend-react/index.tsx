@@ -8,8 +8,9 @@ export function ThinBackend({ children, requireLogin = false }) {
     const [authCompleted, setAuthCompleted] = useState(false);
 
     useEffect(() => {
-        (requireLogin ? ensureIsUser : initAuth)().then(() => setAuthCompleted(true))
-    }, [])
+        const result = initAuth(() => setAuthCompleted(true));
+        result.then(userId => setAuthCompleted(requireLogin ? userId !== null : true));
+    }, []);
 
     let childrenOrLogin = children;
     if (requireLogin && !authCompleted) {
