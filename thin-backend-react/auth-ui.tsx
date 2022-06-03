@@ -5,7 +5,7 @@ import { DataSyncController, ihpBackendUrl } from 'thin-backend';
 import { didCompleteAuthentication } from 'thin-backend/auth.js';
 import * as AuthApi from './auth-api.js';
 
-const DEFAULT_APP_ICON = 'https://thin-backend-prod.s3.amazonaws.com/public-static/thin-icon-black.png';
+const DEFAULT_APP_ICON = <img src="https://thin-backend-prod.s3.amazonaws.com/public-static/thin-icon-black.png" width={64} height={26.875}/>;
 
 export function LoginAndSignUp() {
     const [signUp, setSignUp] = useState(false);
@@ -25,7 +25,7 @@ export function LoginAndSignUp() {
     }
 
     if (signUp) {
-        return <SignUpProps onLoginClick={() => setSignUp(false)}/>
+        return <SignUp onLoginClick={() => setSignUp(false)}/>
     } else {
         return <Login onSignUpClick={() => setSignUp(true)}/>
     }
@@ -34,15 +34,32 @@ export function LoginAndSignUp() {
 interface LoginProps {
     description?: string,
     onSignUpClick: () => void,
-    appIcon?: string
+    
+    /**
+     * An image shown above the title in the login form.
+     * 
+     * If nothing is specified, the Thin logo is used as the default icon.
+     * 
+     * @example
+     * <Login appIcon={<img src="/custom-icon.png" />} />
+     */
+    appIcon?: React.ReactNode,
+    
+    /**
+     * Loading spinner shown while the login form is loading.
+     * 
+     * @example
+     * <Login loadingSpinner={<CustomLoadingSpinner />} />
+     */
+    loadingSpinner?: React.ReactNode,
 }
-export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }: LoginProps) {
+export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON, loadingSpinner = <LoadingSpinner small/> }: LoginProps) {
     return <div className="thin-auth">
         <div className="thin-auth-container">
             <div className="thin-auth-container-inner">
                 <div className="thin-auth-box">
                     <div className="thin-auth-icon-container">
-                        <img src={appIcon}/>
+                        {appIcon}
                     </div>
 
                     <h1>Welcome</h1>
@@ -50,7 +67,7 @@ export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }
                     <p className="thin-auth-description">
                         {description || 'Please log in to continue with the application.'}
                     </p>
-                    <LoginForm />
+                    <LoginForm loadingSpinner={loadingSpinner}/>
 
                     <p>
                         <span className="thin-auth-signup">Don't have an account?</span> <a href={ihpBackendUrl('/NewUser')} onClick={() => { event.preventDefault(); onSignUpClick(); }}>Sign up</a>
@@ -65,13 +82,14 @@ export function Login({ description, onSignUpClick, appIcon = DEFAULT_APP_ICON }
     </div>
 }
 
-function LoginForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function LoginForm({ loadingSpinner }) {
     const [isLoading, setLoading] = useState(false);
     const [lastError, setLastError] = useState<'UserLocked' | 'UserUnconfirmed' | 'InvalidCredentials' | null>(null);
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
+        const form = event.target as any;
+        const { email, password } = form;
+
         event.preventDefault();
         setLoading(true);
         setLastError(null);
@@ -99,15 +117,11 @@ function LoginForm() {
         <input
             className="thin-auth-form-group"
             name="email"
-            value={email}
             type="email"
             placeholder="E-Mail"
             required
             autoFocus
             autoComplete="email"
-            onChange={event => {
-                setEmail(event.target.value);
-            }}
             spellCheck={false}
         />
         <input
@@ -116,10 +130,6 @@ function LoginForm() {
             type="password"
             placeholder="Password"
             autoComplete="current-password"
-            value={password}
-            onChange={event => {
-                setPassword(event.target.value);
-            }}
         />
         <p>
             <a href="#">Forgot your password?</a>
@@ -127,7 +137,7 @@ function LoginForm() {
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <LoadingSpinner small/>
+                    ? loadingSpinner
                     : "Login"
                 }
             </button>
@@ -154,18 +164,35 @@ function LoginError({ errorType }: LoginErrorProps) {
 interface SignUpProps {
     description?: string,
     onLoginClick: () => void,
-    appIcon?: string
+    
+    /**
+     * An image shown above the title in the signup form.
+     * 
+     * If nothing is specified, the Thin logo is used as the default icon.
+     * 
+     * @example
+     * <SignUp appIcon={<img src="/custom-icon.png" />} />
+     */
+    appIcon?: React.ReactNode,
+    
+    /**
+     * Loading spinner shown while the sign up form is loading.
+     * 
+     * @example
+     * <SignUp loadingSpinner={<CustomLoadingSpinner />} />
+     */
+     loadingSpinner?: React.ReactNode,
 }
-export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_ICON }: SignUpProps) {
+export function SignUp({ description, onLoginClick, appIcon = DEFAULT_APP_ICON, loadingSpinner = <LoadingSpinner small/> }: SignUpProps) {
     return <div className="thin-auth">
         <div className="thin-auth-container">
             <div className="thin-auth-container-inner">
                 <div className="thin-auth-box">
                     <div className="thin-auth-icon-container">
-                        <img src={appIcon}/>
+                        {appIcon}
                     </div>
 
-                    <SignUpForm description={description} onLoginClick={onLoginClick}/>
+                    <SignUpForm description={description} onLoginClick={onLoginClick} loadingSpinner={loadingSpinner}/>
                 </div>
 
                 <div className="thin-auth-built-with">
@@ -176,15 +203,17 @@ export function SignUpProps({ description, onLoginClick, appIcon = DEFAULT_APP_I
     </div>
 }
 
-function SignUpForm({ description, onLoginClick }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function SignUpForm({ description = 'Sign up for an account to use this application.', onLoginClick, loadingSpinner }) {
     const [isLoading, setLoading] = useState(false);
     const [validationFailures, setValidationFailures] = useState([]);
     const [requiresEmailConfirmation, setRequiresEmailConfirmation] = useState(false);
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
+        
+        const form = event.target as any;
+        const { email, password } = form;
+
         setLoading(true);
         setValidationFailures([]);
 
@@ -217,7 +246,7 @@ function SignUpForm({ description, onLoginClick }) {
         return <div>
                 <h1>Confirm your Email!</h1>
                 
-                <p>Before you can start, please quickly confirm your email address by clicking the link we've sent to {email}.</p>
+                <p>Before you can start, please quickly confirm your email address by clicking the link we've sent to your email address.</p>
 
                 <p>
                     <a href="#" onClick={event => {
@@ -233,20 +262,16 @@ function SignUpForm({ description, onLoginClick }) {
         <h1>Sign Up</h1>
 
         <p className="thin-auth-description">
-            {description || 'Sign up for an account to use this application.'}
+            {description}
         </p>
         <div className="thin-auth-form-group">
             <input
                 name="email"
-                value={email}
                 type="email"
                 placeholder="E-Mail"
                 required
                 autoFocus
                 autoComplete="email"
-                onChange={event => {
-                    setEmail(event.target.value);
-                }}
                 spellCheck={false}
                 className={emailValidationFailure ? 'thin-auth-invalid' : ''}
             />
@@ -259,10 +284,6 @@ function SignUpForm({ description, onLoginClick }) {
                 type="password"
                 placeholder="Password"
                 autoComplete="new-password"
-                value={password}
-                onChange={event => {
-                    setPassword(event.target.value);
-                }}
                 className={passwordValidationFailure ? 'thin-auth-invalid' : ''}
             />
             {passwordValidationFailure && <div className="thin-auth-invalid-feedback">{passwordValidationFailure[1]}</div>}
@@ -271,7 +292,7 @@ function SignUpForm({ description, onLoginClick }) {
         <div>
             <button type="submit" disabled={isLoading}>
                 {isLoading
-                    ? <LoadingSpinner small/>
+                    ? loadingSpinner
                     : "Sign Up"
                 }
             </button>
