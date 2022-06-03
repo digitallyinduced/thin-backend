@@ -101,9 +101,8 @@ function LoginForm({ loadingSpinner }) {
             didCompleteAuthentication(userId, jwt);
         } else {
             setLastError(response.tag);
+            setLoading(false);
         }
-
-        setLoading(false);
     }
 
     useEffect(() => {
