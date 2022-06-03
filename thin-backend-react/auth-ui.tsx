@@ -94,7 +94,7 @@ function LoginForm({ loadingSpinner }) {
         setLoading(true);
         setLastError(null);
 
-        const response = await AuthApi.loginWithEmailAndPassword(email, password);
+        const response = await AuthApi.loginWithEmailAndPassword(email.value, password.value);
 
         if (response.tag === 'LoginSuccessful') {
             const { userId, jwt } = response;
