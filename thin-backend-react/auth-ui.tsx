@@ -87,7 +87,7 @@ function LoginForm({ loadingSpinner }) {
     const [lastError, setLastError] = useState<'UserLocked' | 'UserUnconfirmed' | 'InvalidCredentials' | null>(null);
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
-        const form = event.target as any;
+        const form = event.currentTarget;
         const { email, password } = form;
 
         event.preventDefault();
@@ -210,7 +210,7 @@ function SignUpForm({ description = 'Sign up for an account to use this applicat
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
         
-        const form = event.target as any;
+        const form = event.currentTarget;
         const { email, password } = form;
 
         setLoading(true);
