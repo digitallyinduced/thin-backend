@@ -1,11 +1,11 @@
 {
   "name": "thin-backend-react",
   "type": "module",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node_modules/.bin/tsc && cp auth.css build/",
+    "build": "node_modules/.bin/tsc",
     "typecheck": "node_modules/.bin/tsc --watch"
   },
   "peerDependencies": {
