@@ -5,7 +5,7 @@ import { DataSyncController, ihpBackendUrl } from 'thin-backend';
 import { didCompleteAuthentication } from 'thin-backend/auth.js';
 import * as AuthApi from './auth-api.js';
 
-const DEFAULT_APP_ICON = <img src="https://thin-backend-prod.s3.amazonaws.com/public-static/thin-icon-black.png" width={64} height={26.875}/>;
+const DEFAULT_APP_ICON = <img src="https://thin-backend-prod.s3.amazonaws.com/public-static/thin-logo-black.svg" width={64} height={26}/>;
 
 export function LoginAndSignUp() {
     const [signUp, setSignUp] = useState(false);
