@@ -216,7 +216,7 @@ function SignUpForm({ description = 'Sign up for an account to use this applicat
         setLoading(true);
         setValidationFailures([]);
 
-        const response = await AuthApi.createUser(email, password);
+        const response = await AuthApi.createUser(email.value, password.value);
         if (response.tag === 'DidCreateUser') {
             const { userId, jwt, emailConfirmationRequired } = response;
 
