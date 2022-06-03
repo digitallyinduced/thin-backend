@@ -5,7 +5,7 @@ import { DataSyncController, ihpBackendUrl } from 'thin-backend';
 import { didCompleteAuthentication } from 'thin-backend/auth.js';
 import * as AuthApi from './auth-api.js';
 
-const DEFAULT_APP_ICON = <img src="https://thin-backend-prod.s3.amazonaws.com/public-static/thin-icon-black.png" width={64} height={26.875}/>;
+const DEFAULT_APP_ICON = <img src="https://thin-backend-prod.s3.amazonaws.com/public-static/thin-logo-black.svg" width={64} height={26}/>;
 
 export function LoginAndSignUp() {
     const [signUp, setSignUp] = useState(false);
@@ -87,8 +87,7 @@ function LoginForm({ loadingSpinner }) {
     const [lastError, setLastError] = useState<'UserLocked' | 'UserUnconfirmed' | 'InvalidCredentials' | null>(null);
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
-        const form = event.target as any;
-        const { email, password } = form;
+        const { email, password } = event.currentTarget;
 
         event.preventDefault();
         setLoading(true);
@@ -210,8 +209,7 @@ function SignUpForm({ description = 'Sign up for an account to use this applicat
     const onSubmit: React.FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
         
-        const form = event.target as any;
-        const { email, password } = form;
+        const { email, password } = event.currentTarget;
 
         setLoading(true);
         setValidationFailures([]);
