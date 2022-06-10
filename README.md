@@ -22,11 +22,11 @@
   </a>
 </p>
 
-# About Thin
+# Thin Backend: Instant API for your Postgres DB
 
 Thin Backend is a blazing fast, universal web app backend for making realtime single page apps.
 
-Instead of manually writing REST API endpoints or GraphQL resolvers you can use a Thin Backend server to automatically get a fully feature web application backend. Thin exposes high level functions to create, read, update and delete database record.
+Instead of manually writing REST API endpoints or GraphQL resolvers, use a Thin Backend server to automatically get a fully featured API backend on top of your Postgres DB. Thin exposes high level functions to create, read, update and delete database record.
 
 ## Code Examples
 
