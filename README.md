@@ -96,16 +96,13 @@ function App() {
 }
 ```
 
-## Design Ideas
+[Try on Vercel](https://thin-backend-todo-app.vercel.app/)
 
-**We believe that web application development can be fundamentally simplified by working with two principles:**
+## Top-notch Autocompletion
 
-1. All data is realtime and reflects the latest database state: Local state management is fundamentally hard as it's dealing with distributed system problems. Best to avoid it alltogether.
-2. All database operations go through a unified standard interface, IHP DataSync in our case.
+The TypeScript definitions not only provide safety, they also provide really nice autocompletion.
 
-![](https://thinbackend.app/startpage/architecture.png)
-
-Thin Backend comes with everything needed to build blazing fast, realtime single page apps.
+![](https://thin.dev/startpage/autocomplete30.webp)
 
 
 ## Feature Overview
