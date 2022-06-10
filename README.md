@@ -200,6 +200,8 @@ The TypeScript definitions not only provide safety, they also provide really nic
 
 [Learn how to get started in the Getting Started Guide](https://thin.dev/docs/your-first-project)
 
+[You can also self-host Thin Backend.](https://thin.dev/docs/self-hosting)
+
 ## Commercial Support
 
 Thin Backend is built [on the IHP platform](https://ihp.digitallyinduced.com/), Haskell's leading web framework. IHP is used in production by digitally induced since 2017. You can expect continuous support and development in the future.
