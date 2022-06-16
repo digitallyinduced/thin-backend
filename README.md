@@ -218,7 +218,7 @@ You can find details [on the Partners page](https://ihp.digitallyinduced.com/Par
 
 You can find some example apps here:
 
-- [Todo App](https://github.com/digitallyinduced/ihp-backend-todo-app)
+- [Todo App](https://github.com/digitallyinduced/thin-backend-todo-app)
 - [Chat App](https://github.com/digitallyinduced/ihp-backend-chat-example-app)
 - [Twitter Clone](https://github.com/digitallyinduced/ihp-backend-twitter-clone)
 
