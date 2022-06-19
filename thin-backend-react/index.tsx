@@ -35,7 +35,7 @@ const recordsCache = new Map();
  * @example
  * const messages = useQuery(query('messages').orderBy('createdAt'));
  */
-export function useQuery(queryBuilder) {
+export function useQuery(queryBuilder, options = null) {
     const [records, setRecords] = useState(() => {
         const strinigifiedQuery = JSON.stringify(queryBuilder.query);
         const cachedRecords = recordsCache.get(strinigifiedQuery);
@@ -54,7 +54,7 @@ export function useQuery(queryBuilder) {
         // Invalidate existing records, as the query might have been changed
         setRecords(cachedRecords === undefined ? null : cachedRecords);
 
-        const dataSubscription = new DataSubscription(queryBuilder.query);
+        const dataSubscription = new DataSubscription(queryBuilder.query, options);
         dataSubscription.createOnServer();
 
         // The dataSubscription is automatically closed when the last subscriber on

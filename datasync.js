@@ -230,7 +230,7 @@ const APPEND_NEW_RECORD = 0;
 const PREPEND_NEW_RECORD = 1;
 
 class DataSubscription {
-    constructor(query) {
+    constructor(query, options = null) {
         if (typeof query !== "object" || !('table' in query)) {
             throw new Error("Query passed to `new DataSubscription(..)` doesn't look like a query object. If you're using the `query()` functions to costruct the object, make sure you pass the `.query` property, like this: `new DataSubscription(query('my_table').orderBy('createdAt').query)`");
         }
@@ -254,7 +254,7 @@ class DataSubscription {
         this.onMessage = this.onMessage.bind(this);
 
         // When a new record is inserted, do we put it at the end or at the beginning?
-        this.newRecordBehaviour = this.detectNewRecordBehaviour();
+        this.newRecordBehaviour = (options && 'newRecordBehaviour' in options) ? options.newRecordBehaviour : this.detectNewRecordBehaviour();
         
         this.optimisticCreatedPendingRecordIds = [];
     }
