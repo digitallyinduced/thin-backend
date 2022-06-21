@@ -268,9 +268,7 @@ class DataSubscription {
             return PREPEND_NEW_RECORD;
         }
 
-        const isOrderByDesc = this.query.orderByClause.length > 0 && this.query.orderByClause[0].orderByDirection === 'Desc';
-
-        return isOrderByDesc ? APPEND_NEW_RECORD : PREPEND_NEW_RECORD;
+        return APPEND_NEW_RECORD;
     }
 
     async createOnServer() {
