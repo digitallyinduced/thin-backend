@@ -19,7 +19,7 @@ import {
     whereGreaterThan,
     whereGreaterThanOrEqual
 } from './querybuilder.js';
-import { DataSyncController, DataSubscription, initThinBackend, createRecord, createRecords, updateRecord, updateRecords, deleteRecord, deleteRecords } from './datasync.js';
+import { DataSyncController, DataSubscription, initThinBackend, createRecord, createRecords, updateRecord, updateRecords, deleteRecord, deleteRecords, NewRecordBehaviour } from './datasync.js';
 import { Transaction, withTransaction } from './transaction.js';
 
 export {
@@ -45,7 +45,7 @@ export {
     whereGreaterThanOrEqual,
 
     /* datasync.js */
-    DataSyncController, DataSubscription, initThinBackend, createRecord, createRecords, updateRecord, updateRecords, deleteRecord, deleteRecords,
+    DataSyncController, DataSubscription, initThinBackend, createRecord, createRecords, updateRecord, updateRecords, deleteRecord, deleteRecords, NewRecordBehaviour,
 
     /* transaction.js */
     Transaction, withTransaction
