@@ -3,30 +3,18 @@
     <img src="header.png" />
   </a>
 </p>
-
+<h1 align="center"><b>Thin Backend</b></h1>
 <p align="center">
-  <img alt="MIT License" src="https://img.shields.io/github/license/digitallyinduced/thin-backend">
-
-  <a href="https://twitter.com/thinbackend" target="_blank">
-    <img src="https://img.shields.io/twitter/follow/thinbackend"/>
-  </a>
+    Instant API for your Postgres DB
+    <br />
+    <a href="https://thin.dev/"><strong>thin.dev »</strong></a>
 </p>
-
-<p align="center">
-  <a href="https://thin.dev/" target="_blank">
-    Website
-  </a>
-  |
-  <a href="https://thin.dev/docs" target="_blank">
-    Documentation
-  </a>
-</p>
-
-# Thin Backend: Instant API for your Postgres DB
 
 Thin Backend is a blazing fast, universal web app backend for making realtime single page apps.
 
 Instead of manually writing REST API endpoints or GraphQL resolvers, use a Thin Backend server to automatically get a fully featured API backend on top of your Postgres DB. Thin exposes high level functions to create, read, update and delete database record.
+
+![](https://vercel.com/_next/image?url=https%3A%2F%2Fvercel.com%2Fapi%2Fv1%2Fintegrations%2Fassets%2Foac_1Uwswlv4y8SGwzbOJx5gqpmv%2Fimages%2Fee8547d145d55b497f56ec02520ae22f78d1f981.png&w=3840&q=75)
 
 ## Code Examples
 
@@ -144,6 +132,8 @@ The TypeScript definitions not only provide safety, they also provide really nic
     Whenever you add or change a table in the Schema Designer, the changes will only be applied to the in-memory schema. The actual postgres database will only be touched when you run migrations.
 
     You can think of this like in a git workflow: In git changes are only applied to the repository history when you do a git commit. In Thin Backend this git commit is running a database migration.
+    
+    ![Git-like Migrations in Thin](https://vercel.com/_next/image?url=https%3A%2F%2Fvercel.com%2Fapi%2Fv1%2Fintegrations%2Fassets%2Foac_1Uwswlv4y8SGwzbOJx5gqpmv%2Fimages%2Fc74dd072e8c46fc642045f7497963f15acf11aab.png&w=3840&q=75)
 
 - **Proven Architecture:**
 
@@ -202,18 +192,6 @@ The TypeScript definitions not only provide safety, they also provide really nic
 
 [You can also self-host Thin Backend.](https://thin.dev/docs/self-hosting)
 
-## Commercial Support
-
-Thin Backend is built [on the IHP platform](https://ihp.digitallyinduced.com/), Haskell's leading web framework. IHP is used in production by digitally induced since 2017. You can expect continuous support and development in the future.
-
-Additionally we're happy to provide commercial support for your Thin Backend project, either directly by digitally induced or through the di Partners network
-
-### digitally induced Partners
-
-The digitally induced Partners offer you professional IHP development, consulting and support. All partners have experience in working with IHP projects in production can help you build fast and well-architected projects.
-
-You can find details [on the Partners page](https://ihp.digitallyinduced.com/Partners).
-
 ## Example Apps
 
 You can find some example apps here:
@@ -224,9 +202,7 @@ You can find some example apps here:
 
 ## Community
 
-Questions, or need help? [Join our Slack Community](https://ihp.digitallyinduced.com/Slack)
-
-[Also check out the Forum!](https://ihp.digitallyinduced.com/community/)
+Questions, or need help? [Join our Thin Community](https://community.thin.dev/)
 
 ## Contributing
 
