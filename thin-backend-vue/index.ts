@@ -1,4 +1,4 @@
-import { DataSubscription, ensureIsUser, initAuth, QueryBuilder, type TableName } from 'thin-backend';
+import { DataSubscription, ensureIsUser, getCurrentUserId, initAuth, query, QueryBuilder, User, UUID, type TableName } from 'thin-backend';
 import { onMounted, onUnmounted, ref, computed, provide, watch, type Ref, defineComponent, inject } from 'vue';
 
 // To avoid too many loading spinners when going backwards and forwards
@@ -59,6 +59,42 @@ export function useQuery<table extends TableName, result>(queryBuilder: QueryBui
 export function useQuerySingleResult<table extends TableName, result>(queryBuilder: QueryBuilder<table, result>): Ref<result | null> {
     const result = useQuery(queryBuilder.limit(1));
     return computed(() => result.value === null ? null : result.value[0])
+}
+
+export function useCurrentUserId(): Ref<UUID | null> {
+    const authCompleted: Ref<boolean> = inject(AuthCompletedContext, ref(true));
+    const userIdRef: Ref<UUID | null> = ref(null);
+    if (authCompleted.value) {
+        userIdRef.value = getCurrentUserId();
+    } else {
+        watch(authCompleted, () => {
+            userIdRef.value = getCurrentUserId();
+        });
+    }
+    return userIdRef;
+}
+
+export function useIsLoggedIn(): Ref<boolean | null> {
+    const userId = getCurrentUserId();
+    return computed(() => userId !== null);
+}
+
+export function useCurrentUser(): Ref<User | null> {
+    const authCompleted: Ref<boolean> = inject(AuthCompletedContext, ref(true));
+    if (authCompleted.value) {
+        const userId = getCurrentUserId();
+        return useQuerySingleResult(query('users').where('id', userId));
+    } else {
+        const userRef: Ref<User | null> = ref(null);
+        watch(authCompleted, () => {
+            const userId = getCurrentUserId();
+            const user = useQuerySingleResult(query('users').where('id', userId));
+            watch(user, () => {
+                userRef.value = user.value;
+            });
+        });
+        return userRef;
+    }
 }
 
 export const ThinBackend = defineComponent({
