@@ -12,11 +12,11 @@
   "author": "digitally induced, Inc.",
   "license": "MIT",
   "peerDependencies": {
-    "thin-backend": "^0.6.0",
+    "thin-backend": "^0.10.3",
     "vue": "^3.2.33"
   },
   "devDependencies": {
-    "@types/thin-backend": "https://thin.dev/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=f61e9d25-9d27-4592-a1fe-78c9f910eb14&accessToken=HEgYWybWUMqiqKGaQCkqsWRlikVbbqUR",
+    "@types/thin-backend": "https://thin.dev/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=6be5b77b-e3fd-4f4d-ac6c-ce8af73a480e&accessToken=tUElbKPGLqhAIFSFcPrOyPMfdANPZwdT",
     "typescript": "^4.6.3"
   }
 }
