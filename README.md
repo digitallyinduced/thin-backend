@@ -14,7 +14,7 @@ Thin Backend is a blazing fast, universal web app backend for making realtime si
 
 Instead of manually writing REST API endpoints or GraphQL resolvers, use a Thin Backend server to automatically get a fully featured API backend on top of your Postgres DB. Thin exposes high level functions to create, read, update and delete database record.
 
-![](https://vercel.com/_next/image?url=https%3A%2F%2Fvercel.com%2Fapi%2Fv1%2Fintegrations%2Fassets%2Foac_1Uwswlv4y8SGwzbOJx5gqpmv%2Fimages%2Fee8547d145d55b497f56ec02520ae22f78d1f981.png&w=3840&q=75)
+![](https://thin.dev/readme-header.png)
 
 ## Code Examples
 
