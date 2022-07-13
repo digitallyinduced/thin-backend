@@ -75,8 +75,8 @@ export function useCurrentUserId(): Ref<UUID | null> {
 }
 
 export function useIsLoggedIn(): Ref<boolean | null> {
-    const userId = getCurrentUserId();
-    return computed(() => userId !== null);
+    const userId = useCurrentUserId();
+    return computed(() => userId.value !== null);
 }
 
 export function useCurrentUser(): Ref<User | null> {
