@@ -1,6 +1,6 @@
 {
   "name": "thin-backend-vue",
-  "version": "0.1.1",
+  "version": "0.10.0",
   "description": "Vue support for thin",
   "main": "./build/index.js",
   "type": "module",
@@ -18,5 +18,11 @@
   "devDependencies": {
     "@types/thin-backend": "https://thin.dev/ShowTypescriptDeclarationFile?typescriptDeclarationFileId=6be5b77b-e3fd-4f4d-ac6c-ce8af73a480e&accessToken=tUElbKPGLqhAIFSFcPrOyPMfdANPZwdT",
     "typescript": "^4.6.3"
-  }
+  },
+  "types": "./build/index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "auth.css"
+  ]
 }
