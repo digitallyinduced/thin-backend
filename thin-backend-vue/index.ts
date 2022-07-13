@@ -1,5 +1,5 @@
-import { DataSubscription, ensureIsUser, initAuth, QueryBuilder, type TableName } from 'thin-backend';
-import { onMounted, onUnmounted, ref, computed, provide, watch, type Ref, defineComponent, inject } from 'vue';
+import { DataSubscription, ensureIsUser, getCurrentUserId, initAuth, query, QueryBuilder, User, UUID, type TableName } from 'thin-backend';
+import { onMounted, onUnmounted, ref, computed, provide, watch, type Ref, defineComponent, inject, watchEffect } from 'vue';
 
 // To avoid too many loading spinners when going backwards and forwards
 // between pages, we cache the result of queries so we can already showing
@@ -59,6 +59,57 @@ export function useQuery<table extends TableName, result>(queryBuilder: QueryBui
 export function useQuerySingleResult<table extends TableName, result>(queryBuilder: QueryBuilder<table, result>): Ref<result | null> {
     const result = useQuery(queryBuilder.limit(1));
     return computed(() => result.value === null ? null : result.value[0])
+}
+
+export function useCurrentUserId(): Ref<UUID | null> {
+    const authCompleted: Ref<boolean> = inject(AuthCompletedContext, ref(true));
+    const userIdRef: Ref<UUID | null> = ref(null);
+    if (authCompleted.value) {
+        userIdRef.value = getCurrentUserId();
+    } else {
+        watch(authCompleted, () => {
+            userIdRef.value = getCurrentUserId();
+        });
+    }
+    return userIdRef;
+}
+
+export function useIsLoggedIn(): Ref<boolean | null> {
+    const userId = useCurrentUserId();
+    return computed(() => userId.value !== null);
+}
+
+export function useCurrentUser(): Ref<User | null> {
+    const authCompleted: Ref<boolean> = inject(AuthCompletedContext, ref(true));
+
+    const records: Ref<User[] | null> = ref(null);
+    let dataSubscription = null;
+
+    const init = () => {
+        const queryBuilder = query('users').where('id', getCurrentUserId());
+        const strinigifiedQuery = JSON.stringify(queryBuilder.query);
+        dataSubscription = new DataSubscription(queryBuilder.query);
+        dataSubscription.createOnServer();
+
+        let unsubscribeCallback = dataSubscription.subscribe(updatedRecords => {
+            records.value = updatedRecords;
+
+            // Update the cache whenever the records change
+            recordsCache.set(strinigifiedQuery, records);
+        });
+
+        onUnmounted(unsubscribeCallback);
+    };
+
+    if (authCompleted.value) {
+        console.log('auth done, waiting for component mount');
+        onMounted(init);
+    } else {
+        watch(authCompleted, init);
+        console.log('auth not done, waiting for auth');
+    }
+
+    return computed(() => records.value ? records.value[0] : null);
 }
 
 export const ThinBackend = defineComponent({
