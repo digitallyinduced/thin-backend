@@ -1,7 +1,7 @@
 {
   "name": "thin-backend",
   "type": "module",
-  "version": "0.9.1",
+  "version": "0.10.3",
   "description": "",
   "main": "index.js",
   "scripts": {
