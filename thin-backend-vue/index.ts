@@ -1,5 +1,5 @@
 import { DataSubscription, ensureIsUser, getCurrentUserId, initAuth, query, QueryBuilder, User, UUID, type TableName } from 'thin-backend';
-import { onMounted, onUnmounted, ref, computed, provide, watch, type Ref, defineComponent, inject } from 'vue';
+import { onMounted, onUnmounted, ref, computed, provide, watch, type Ref, defineComponent, inject, watchEffect } from 'vue';
 
 // To avoid too many loading spinners when going backwards and forwards
 // between pages, we cache the result of queries so we can already showing
@@ -81,20 +81,35 @@ export function useIsLoggedIn(): Ref<boolean | null> {
 
 export function useCurrentUser(): Ref<User | null> {
     const authCompleted: Ref<boolean> = inject(AuthCompletedContext, ref(true));
-    if (authCompleted.value) {
-        const userId = getCurrentUserId();
-        return useQuerySingleResult(query('users').where('id', userId));
-    } else {
-        const userRef: Ref<User | null> = ref(null);
-        watch(authCompleted, () => {
-            const userId = getCurrentUserId();
-            const user = useQuerySingleResult(query('users').where('id', userId));
-            watch(user, () => {
-                userRef.value = user.value;
-            });
+
+    const records: Ref<User[] | null> = ref(null);
+    let dataSubscription = null;
+
+    const init = () => {
+        const queryBuilder = query('users').where('id', getCurrentUserId());
+        const strinigifiedQuery = JSON.stringify(queryBuilder.query);
+        dataSubscription = new DataSubscription(queryBuilder.query);
+        dataSubscription.createOnServer();
+
+        let unsubscribeCallback = dataSubscription.subscribe(updatedRecords => {
+            records.value = updatedRecords;
+
+            // Update the cache whenever the records change
+            recordsCache.set(strinigifiedQuery, records);
         });
-        return userRef;
+
+        onUnmounted(unsubscribeCallback);
+    };
+
+    if (authCompleted.value) {
+        console.log('auth done, waiting for component mount');
+        onMounted(init);
+    } else {
+        watch(authCompleted, init);
+        console.log('auth not done, waiting for auth');
     }
+
+    return computed(() => records.value ? records.value[0] : null);
 }
 
 export const ThinBackend = defineComponent({
