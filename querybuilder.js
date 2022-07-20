@@ -24,6 +24,9 @@ function infixMany(op, args) {
         op,
         right,
     }
+    if (right === undefined) {
+        return left;
+    }
 
     if (rest.length === 0) {
         return lr
