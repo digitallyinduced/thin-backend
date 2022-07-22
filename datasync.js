@@ -14,7 +14,7 @@ class DataSyncController {
 
     static getWSUrl() {
         if (DataSyncController.ihpBackendHost) {
-            const jwt = localStorage.getItem('ihp_jwt');
+            const jwt = DataSyncController.getJWT();
             const host = DataSyncController.ihpBackendHost
                 .replace('https://', 'wss://')
                 .replace('http://', 'ws://')
@@ -24,6 +24,10 @@ class DataSyncController {
         var socketProtocol = location.protocol === 'https:' ? 'wss' : 'ws';
         var socketHost = socketProtocol + "://" + document.location.hostname + ":" + document.location.port + '/DataSyncController';
         return socketHost;
+    }
+
+    static getJWT() {
+        return typeof localStorage !== 'undefined' ? localStorage.getItem('ihp_jwt') : null;
     }
 
     constructor() {
@@ -66,21 +70,47 @@ class DataSyncController {
         }
 
         const connect = () => new Promise((resolve, reject) => {
-            const socket = new WebSocket(DataSyncController.getWSUrl())
+            // When Thin is called from node.js there's no WebSocket available
+            if (typeof WebSocket === 'undefined') {
+                resolve({
+                    send: (message) => {
+                        const adjustForHTTP = url => url.replace('ws://', 'http://').replace('wss://', 'https://')
+                        const url = adjustForHTTP(DataSyncController.getWSUrl());
+                        const jwt = DataSyncController.getJWT();
+                        const headers = { 'Content-Type': 'application/json' };
+                        if (jwt !== null) {
+                            headers['Authorization'] = 'Bearer ' + jwt;
+                        }
 
-            socket.onopen = event => {
-                // These handlers should only be installed once the connection is established
-                socket.onclose = this.onClose.bind(this);
-                socket.onmessage = this.onMessage.bind(this);
+                        return fetch(url, {
+                                method: 'POST',
+                                body: message,
+                                headers
+                            })
+                            .then(response => response.json())
+                            .then(body => this.onMessage(body))
+                    },
+                    close: () => {
+                        // Nothing to do here
+                    }
+                })
+            } else {
+                const socket = new WebSocket(DataSyncController.getWSUrl())
 
-                resolve(socket);
+                socket.onopen = event => {
+                    // These handlers should only be installed once the connection is established
+                    socket.onclose = this.onClose.bind(this);
+                    socket.onmessage = event => this.onMessage(JSON.parse(event.data));
 
-                for (const listener of this.eventListeners.open) {
-                    listener(event);
+                    resolve(socket);
+
+                    for (const listener of this.eventListeners.open) {
+                        listener(event);
+                    }
                 }
-            }
 
-            socket.onerror = (event) => reject(event);
+                socket.onerror = (event) => reject(event);
+            }
         });
         const wait = timeout => new Promise((resolve) => setTimeout(resolve, timeout));
 
@@ -105,7 +135,7 @@ class DataSyncController {
                 return this.connection;
             } catch (error) {
                 const time = Math.pow(2, Math.min(i, MAX_DELAY_EXPONENT)); // 2, 4, 8, 16, 32, ...
-                console.log('Retrying in ', time, 'secs');
+                console.log('Retrying in ', time, 'secs', error);
                 await wait(time * 1000);
             }
         }
@@ -113,8 +143,7 @@ class DataSyncController {
         throw new Error('Unable to connect to the DataSync Websocket');
     }
 
-    onMessage(event) {
-        const payload = JSON.parse(event.data);
+    onMessage(payload) {
         const requestId = payload.requestId;
         const request = this.pendingRequests.find(request => request.requestId === requestId);
 
