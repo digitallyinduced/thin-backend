@@ -217,7 +217,7 @@ class ConditionBuildable {
     }
 
     whereIn(field, values) {
-        return {
+        const expression = {
             tag: 'InfixOperatorExpression',
             left: {
                 tag: 'ColumnExpression',
@@ -226,9 +226,11 @@ class ConditionBuildable {
             op: 'OpIn',
             right: {
                 tag: 'ListExpression',
-                value: values.map(jsValueToDynamicValue),
+                values: values.map(jsValueToDynamicValue),
             },
         }
+        this._addCondition('OpAnd', expression);
+        return this;
     }
 }
 
@@ -399,6 +401,9 @@ function jsValueToDynamicValue(value) {
 }
 
 export function recordMatchesQuery(query, record) {
+    function evaluateDynamicValue(value) {
+        return (value.tag === 'Null' ? null : value.contents);
+    }
     function evaluate(expression) {
         switch (expression.tag) {
             case 'ColumnExpression': return (expression.field in record) ? record[expression.field] : null;
@@ -414,11 +419,13 @@ export function recordMatchesQuery(query, record) {
                     case 'OpOr': return evaluate(expression.left) || evaluate(expression.right);
                     case 'OpIs': return evaluate(expression.left) == evaluate(expression.right);
                     case 'OpIsNot': return evaluate(expression.left) != evaluate(expression.right);
+                    case 'OpIn': return evaluate(expression.left).includes(evaluate(expression.right));
                     default: throw new Error('Unsupported operator ' + expression.op);
                 }
             }
             case 'NullExpression': return null;
-            case 'LiteralExpression': return (expression.value.tag === 'Null' ? null : expression.value.contents);
+            case 'LiteralExpression': return evaluateDynamicValue(expression);
+            case 'ListExpression': return expression.values.map(value => evaluateDynamicValue(value));
             default: throw new Error('Unsupported expression in evaluate: ' + expression.tag);
         }
     }
