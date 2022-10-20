@@ -419,7 +419,11 @@ export function recordMatchesQuery(query, record) {
                     case 'OpOr': return evaluate(expression.left) || evaluate(expression.right);
                     case 'OpIs': return evaluate(expression.left) == evaluate(expression.right);
                     case 'OpIsNot': return evaluate(expression.left) != evaluate(expression.right);
-                    case 'OpIn': return evaluate(expression.left).includes(evaluate(expression.right));
+                    case 'OpIn': {
+                        const left = evaluate(expression.left);
+                        const right = evaluate(expression.right);
+                        return Array.isArray(right) && right.includes(left);
+                    }
                     default: throw new Error('Unsupported operator ' + expression.op);
                 }
             }
