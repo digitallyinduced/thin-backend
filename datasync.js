@@ -737,7 +737,7 @@ function deleteRecordOptimistic(table, id) {
         const deletedRecord = dataSubscription.records.find(record => record.id === id);
         if (deletedRecord) {
             dataSubscription.onDelete(id);
-            undoOperations.push(() => dataSubscription.onCreate(deleteRecord));
+            undoOperations.push(() => dataSubscription.onCreate(deletedRecord));
         }
     }
 
